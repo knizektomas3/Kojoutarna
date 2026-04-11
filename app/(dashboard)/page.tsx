@@ -76,7 +76,7 @@ export default async function DashboardPage() {
   const salesByCustomer = Object.entries(byCustomer)
     .map(([name, total]) => ({ name, total }))
     .sort((a, b) => b.total - a.total)
-    .slice(0, 15)
+    .slice(0, 8)
 
   // ── Prodej podle typu zákazníka ───────────────────────────────────────
   const byType: Record<string, number> = {}

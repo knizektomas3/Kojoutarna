@@ -98,15 +98,15 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
           {salesByCustomer.length === 0 ? (
             <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
           ) : (
-            <ResponsiveContainer width="100%" height={Math.max(200, salesByCustomer.length * 28)}>
+            <ResponsiveContainer width="100%" height={Math.max(180, salesByCustomer.length * 36)}>
               <BarChart
                 data={salesByCustomer}
                 layout="vertical"
-                margin={{ top: 0, right: 60, left: 80, bottom: 0 }}
+                margin={{ top: 0, right: 90, left: 10, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={75} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={110} />
                 <Tooltip formatter={(v) => fmt(Number(v))} />
                 <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} activeBar={false} label={{ position: 'right', fontSize: 11, formatter: (v: unknown) => fmt(Number(v)) }} />
               </BarChart>
@@ -132,8 +132,6 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                     paddingAngle={3}
                     dataKey="value"
                     activeShape={false}
-                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-                    labelLine={false}
                   >
                     {salesByCustomerType.map((_, i) => (
                       <Cell key={i} fill={TYPE_COLORS[i % TYPE_COLORS.length]} />
@@ -143,13 +141,18 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-wrap justify-center gap-3 mt-2">
-                {salesByCustomerType.map((t, i) => (
-                  <div key={t.name} className="flex items-center gap-1.5 text-sm">
-                    <span className="w-3 h-3 rounded-full inline-block" style={{ background: TYPE_COLORS[i % TYPE_COLORS.length] }} />
-                    <span className="text-gray-600">{t.name}</span>
-                    <span className="font-medium">{fmt(t.value)}</span>
-                  </div>
-                ))}
+                {salesByCustomerType.map((t, i) => {
+                  const total = salesByCustomerType.reduce((s, x) => s + x.value, 0)
+                  const pct = total > 0 ? ((t.value / total) * 100).toFixed(0) : '0'
+                  return (
+                    <div key={t.name} className="flex items-center gap-1.5 text-sm">
+                      <span className="w-3 h-3 rounded-full inline-block" style={{ background: TYPE_COLORS[i % TYPE_COLORS.length] }} />
+                      <span className="text-gray-600">{t.name}</span>
+                      <span className="font-medium">{fmt(t.value)}</span>
+                      <span className="text-gray-400">({pct}%)</span>
+                    </div>
+                  )
+                })}
               </div>
             </>
           )}

@@ -5,3 +5,9 @@ body {
   background: #fafaf8;
   color: #1a1a1a;
 }
+
+.recharts-wrapper:focus,
+.recharts-wrapper svg:focus,
+.recharts-surface:focus {
+  outline: none;
+}
