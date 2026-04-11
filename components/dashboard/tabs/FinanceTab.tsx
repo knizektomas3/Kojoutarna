@@ -83,7 +83,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
               <Tooltip formatter={(v) => fmt(Number(v))} />
               <Legend />
               {genNames.map((g, i) => (
-                <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} />
+                <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
               ))}
             </BarChart>
           </ResponsiveContainer>
@@ -108,7 +108,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                 <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={75} />
                 <Tooltip formatter={(v) => fmt(Number(v))} />
-                <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} label={{ position: 'right', fontSize: 11, formatter: (v: unknown) => fmt(Number(v)) }} />
+                <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} activeBar={false} label={{ position: 'right', fontSize: 11, formatter: (v: unknown) => fmt(Number(v)) }} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -131,6 +131,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                     outerRadius={90}
                     paddingAngle={3}
                     dataKey="value"
+                    activeShape={false}
                     label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >

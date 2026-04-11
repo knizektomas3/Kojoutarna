@@ -82,7 +82,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
               <Tooltip formatter={(v) => Number(v).toLocaleString('cs-CZ') + ' vajec'} />
               <Legend />
               {genNames.map((g, i) => (
-                <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} />
+                <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
               ))}
             </BarChart>
           </ResponsiveContainer>

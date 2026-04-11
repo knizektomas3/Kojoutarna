@@ -70,6 +70,7 @@ export default async function DashboardPage() {
   const byCustomer: Record<string, number> = {}
   for (const i of allIncomes) {
     const name = i.customer_name ?? '—'
+    if (name === 'Historická data') continue
     byCustomer[name] = (byCustomer[name] || 0) + i.amount
   }
   const salesByCustomer = Object.entries(byCustomer)
@@ -80,6 +81,7 @@ export default async function DashboardPage() {
   // ── Prodej podle typu zákazníka ───────────────────────────────────────
   const byType: Record<string, number> = {}
   for (const i of allIncomes) {
+    if (i.customer_name === 'Historická data') continue
     const t = i.customer_type ?? 'Jiné'
     byType[t] = (byType[t] || 0) + i.amount
   }
