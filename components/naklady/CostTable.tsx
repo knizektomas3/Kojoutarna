@@ -45,13 +45,8 @@ export default function CostTable({
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center flex-wrap gap-2">
+      <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
         <span className="text-sm text-gray-500">Celkem {total} záznamů</span>
-        <div className="flex gap-4 text-sm">
-          <span className="text-gray-500">Pořizovací: <span className="font-medium text-red-500">{fmt(acquisition)}</span></span>
-          <span className="text-gray-500">Provozní: <span className="font-medium text-red-500">{fmt(operational)}</span></span>
-          <span className="font-semibold text-red-500">{fmt(pageSum)}</span>
-        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">

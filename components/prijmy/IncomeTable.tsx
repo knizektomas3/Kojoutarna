@@ -45,7 +45,6 @@ export default function IncomeTable({
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
         <span className="text-sm text-gray-500">Celkem {total} záznamů</span>
-        <span className="font-semibold text-green-600">{fmt(pageTotal)} na této stránce</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
