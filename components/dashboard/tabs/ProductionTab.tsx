@@ -74,6 +74,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
         {monthlyProduction.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
         ) : (
+          <div onMouseDown={e => e.preventDefault()}>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={monthlyProduction} margin={{ top: 4, right: 4, left: -10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -86,6 +87,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
               ))}
             </BarChart>
           </ResponsiveContainer>
+          </div>
         )}
       </div>
     </div>

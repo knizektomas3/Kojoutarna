@@ -75,18 +75,20 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
         {monthlySales.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
         ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={monthlySales} margin={{ top: 4, right: 4, left: 10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-              <Tooltip formatter={(v) => fmt(Number(v))} />
-              <Legend />
-              {genNames.map((g, i) => (
-                <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
-              ))}
-            </BarChart>
-          </ResponsiveContainer>
+          <div onMouseDown={e => e.preventDefault()}>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={monthlySales} margin={{ top: 4, right: 4, left: 10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v) => fmt(Number(v))} />
+                <Legend />
+                {genNames.map((g, i) => (
+                  <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         )}
       </div>
 
@@ -98,19 +100,21 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
           {salesByCustomer.length === 0 ? (
             <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
           ) : (
-            <ResponsiveContainer width="100%" height={Math.max(180, salesByCustomer.length * 36)}>
-              <BarChart
-                data={salesByCustomer}
-                layout="vertical"
-                margin={{ top: 0, right: 90, left: 10, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={110} />
-                <Tooltip formatter={(v) => fmt(Number(v))} />
-                <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} activeBar={false} label={{ position: 'right', fontSize: 11, formatter: (v: unknown) => fmt(Number(v)) }} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div onMouseDown={e => e.preventDefault()}>
+              <ResponsiveContainer width="100%" height={Math.max(180, salesByCustomer.length * 36)}>
+                <BarChart
+                  data={salesByCustomer}
+                  layout="vertical"
+                  margin={{ top: 0, right: 90, left: 10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                  <XAxis type="number" hide />
+                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={110} />
+                  <Tooltip formatter={(v) => fmt(Number(v))} />
+                  <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} activeBar={false} label={{ position: 'right', fontSize: 11, formatter: (v: unknown) => fmt(Number(v)) }} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           )}
         </div>
 
@@ -121,6 +125,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
             <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
           ) : (
             <>
+              <div onMouseDown={e => e.preventDefault()}>
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie
@@ -140,6 +145,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                   <Tooltip formatter={(v) => fmt(Number(v))} />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
               <div className="flex flex-wrap justify-center gap-3 mt-2">
                 {salesByCustomerType.map((t, i) => {
                   const total = salesByCustomerType.reduce((s, x) => s + x.value, 0)
