@@ -4,12 +4,23 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Income } from '@/types'
+import Pagination from '@/components/Pagination'
 
 function fmt(n: number) {
   return n.toLocaleString('cs-CZ') + ' Kč'
 }
 
-export default function IncomeTable({ incomes }: { incomes: Income[] }) {
+export default function IncomeTable({
+  incomes,
+  page,
+  total,
+  pageSize,
+}: {
+  incomes: Income[]
+  page: number
+  total: number
+  pageSize: number
+}) {
   const router = useRouter()
   const supabase = createClient()
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -22,7 +33,7 @@ export default function IncomeTable({ incomes }: { incomes: Income[] }) {
     router.refresh()
   }
 
-  const total = incomes.reduce((s, i) => s + i.amount, 0)
+  const pageTotal = incomes.reduce((s, i) => s + i.amount, 0)
 
   if (incomes.length === 0) {
     return <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
@@ -33,8 +44,8 @@ export default function IncomeTable({ incomes }: { incomes: Income[] }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
-        <span className="text-sm text-gray-500">{incomes.length} záznamů</span>
-        <span className="font-semibold text-green-600">{fmt(total)}</span>
+        <span className="text-sm text-gray-500">Celkem {total} záznamů</span>
+        <span className="font-semibold text-green-600">{fmt(pageTotal)} na této stránce</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -66,6 +77,9 @@ export default function IncomeTable({ incomes }: { incomes: Income[] }) {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="px-4 pb-3">
+        <Pagination page={page} total={total} pageSize={pageSize} />
       </div>
     </div>
   )

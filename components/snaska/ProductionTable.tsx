@@ -4,8 +4,19 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Production } from '@/types'
+import Pagination from '@/components/Pagination'
 
-export default function ProductionTable({ productions }: { productions: Production[] }) {
+export default function ProductionTable({
+  productions,
+  page,
+  total,
+  pageSize,
+}: {
+  productions: Production[]
+  page: number
+  total: number
+  pageSize: number
+}) {
   const router = useRouter()
   const supabase = createClient()
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -57,6 +68,9 @@ export default function ProductionTable({ productions }: { productions: Producti
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="px-4 pb-3">
+        <Pagination page={page} total={total} pageSize={pageSize} />
       </div>
     </div>
   )

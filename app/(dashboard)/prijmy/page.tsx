@@ -5,8 +5,11 @@ import FilterBar from '@/components/FilterBar'
 
 type Props = { searchParams: Promise<Record<string, string>> }
 
+const PAGE_SIZE = 10
+
 export default async function PrijmyPage({ searchParams }: Props) {
   const params = await searchParams
+  const page = Math.max(1, parseInt(params.page ?? '1'))
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -19,7 +22,7 @@ export default async function PrijmyPage({ searchParams }: Props) {
 
   let query = supabase
     .from('incomes')
-    .select('*, generation:generations(name)')
+    .select('*, generation:generations(name)', { count: 'exact' })
     .eq('user_id', user!.id)
     .order('date', { ascending: false })
 
@@ -29,7 +32,8 @@ export default async function PrijmyPage({ searchParams }: Props) {
   if (params.customer) query = query.eq('customer_name', params.customer)
   if (params.customer_type) query = query.eq('customer_type', params.customer_type)
 
-  const { data: incomes } = await query
+  const from = (page - 1) * PAGE_SIZE
+  const { data: incomes, count } = await query.range(from, from + PAGE_SIZE - 1)
 
   const filterFields = [
     { type: 'date-range' as const },
@@ -56,13 +60,13 @@ export default async function PrijmyPage({ searchParams }: Props) {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-amber-900">💰 Příjmy</h1>
-      <FilterBar fields={filterFields} resultCount={incomes?.length ?? 0} />
+      <FilterBar fields={filterFields} resultCount={count ?? 0} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <IncomeForm generations={generations} customers={customers} />
         </div>
         <div className="lg:col-span-2">
-          <IncomeTable incomes={incomes ?? []} />
+          <IncomeTable incomes={incomes ?? []} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
         </div>
       </div>
     </div>
