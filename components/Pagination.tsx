@@ -48,7 +48,7 @@ export default function Pagination({
         <button
           onClick={() => goTo(page - 1)}
           disabled={page === 1}
-          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50"
+          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50 cursor-pointer disabled:cursor-default"
         >
           ←
         </button>
@@ -59,7 +59,7 @@ export default function Pagination({
             <button
               key={p}
               onClick={() => goTo(p as number)}
-              className={`w-8 h-8 rounded-lg text-sm border transition-colors ${
+              className={`w-8 h-8 rounded-lg text-sm border transition-colors cursor-pointer ${
                 p === page
                   ? 'bg-amber-700 text-white border-amber-700'
                   : 'border-gray-200 hover:bg-gray-50'
@@ -72,7 +72,7 @@ export default function Pagination({
         <button
           onClick={() => goTo(page + 1)}
           disabled={page === totalPages}
-          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50"
+          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50 cursor-pointer disabled:cursor-default"
         >
           →
         </button>
