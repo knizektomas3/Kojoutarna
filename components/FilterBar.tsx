@@ -78,17 +78,16 @@ export default function FilterBar({
           )
         })}
 
-        <div className="flex items-end gap-3 ml-auto">
-          <span className="text-sm text-gray-400 pb-1.5">{resultCount} záznamů</span>
-          {hasFilters && (
+        {hasFilters && (
+          <div className="flex items-end ml-auto">
             <button
               onClick={reset}
               className="text-sm text-amber-700 hover:underline pb-1.5"
             >
               Zrušit filtry
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
