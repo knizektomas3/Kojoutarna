@@ -78,7 +78,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={monthlyProduction} margin={{ top: 4, right: 4, left: -10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, angle: -45, textAnchor: 'end', dy: 4 }} height={50} interval={0} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip formatter={(v) => Number(v).toLocaleString('cs-CZ') + ' vajec'} />
               <Legend />

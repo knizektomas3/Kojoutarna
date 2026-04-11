@@ -79,7 +79,7 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={monthlySales} margin={{ top: 4, right: 4, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, angle: -45, textAnchor: 'end', dy: 4 }} height={50} interval={0} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v) => fmt(Number(v))} />
                 <Legend />
