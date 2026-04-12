@@ -9,7 +9,6 @@ const links = [
   { href: '/snaska', label: 'Snáška', icon: '🥚' },
   { href: '/prijmy', label: 'Příjmy', icon: '💰' },
   { href: '/naklady', label: 'Náklady', icon: '🛒' },
-  { href: '/import', label: 'Import CSV', icon: '📁' },
 ]
 
 export default function Navigation({ userEmail }: { userEmail: string }) {
