@@ -49,7 +49,7 @@ export default function GenerationsTab({ generations }: { generations: Generatio
   const GenCard = ({ g }: { g: Generation }) => {
     const isActive = !g.ended_at
     const ageMs = new Date().getTime() - new Date(g.started_at).getTime()
-    const ageDays = Math.floor(ageMs / 86400000)
+    const ageDays = Math.floor(ageMs / 86400000) + 17 * 7
     const ageWeeks = Math.floor(ageDays / 7)
 
     return (
