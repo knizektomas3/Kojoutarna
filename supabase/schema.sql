@@ -3,6 +3,7 @@ create table generations (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
   name text not null,
+  breed text,
   started_at date not null,
   ended_at date,
   hen_count integer,

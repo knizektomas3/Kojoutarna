@@ -2,6 +2,7 @@ export type Generation = {
   id: string
   user_id: string
   name: string
+  breed: string | null
   started_at: string
   ended_at: string | null
   hen_count: number | null

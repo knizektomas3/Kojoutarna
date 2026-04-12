@@ -12,6 +12,7 @@ export default function GenerationModal({
 }) {
   const supabase = createClient()
   const [name, setName] = useState('')
+  const [breed, setBreed] = useState('')
   const [startedAt, setStartedAt] = useState(new Date().toISOString().split('T')[0])
   const [henCount, setHenCount] = useState('')
   const [saving, setSaving] = useState(false)
@@ -26,6 +27,7 @@ export default function GenerationModal({
     const { error: err } = await supabase.from('generations').insert({
       user_id: user!.id,
       name,
+      breed: breed || null,
       started_at: startedAt,
       hen_count: henCount ? parseInt(henCount) : null,
     })
@@ -42,15 +44,11 @@ export default function GenerationModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="field-label">Název</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="např. Třetí"
-              className="field-input"
-              autoFocus
-            />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="např. Třetí" className="field-input" autoFocus />
+          </div>
+          <div>
+            <label className="field-label">Plemeno</label>
+            <input type="text" value={breed} onChange={(e) => setBreed(e.target.value)} placeholder="např. Dominant, ISA Brown" className="field-input" />
           </div>
           <div>
             <label className="field-label">Datum zahájení</label>
