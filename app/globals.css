@@ -201,6 +201,9 @@ body {
   }
 }
 
+/* ── Mobile: skrýt scrollbar u horizontálního scrollu ── */
+.overflow-x-auto::-webkit-scrollbar { display: none; }
+
 /* ── Toast animation ─────────────────────────────────── */
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(0.5rem); }

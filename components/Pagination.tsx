@@ -47,7 +47,7 @@ export default function Pagination({
   }
 
   return (
-    <div className="flex items-center justify-between mt-3">
+    <div className="flex items-center justify-between mt-3 gap-2 flex-wrap">
       <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>
         {from}–{to} z {total}
       </span>

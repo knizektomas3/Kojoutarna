@@ -37,25 +37,23 @@ export default function FilterBar({
         {fields.map((field) => {
           if (field.type === 'date-range') {
             return (
-              <div key="date-range" className="flex gap-2 items-end">
-                <div>
+              <div key="date-range" className="flex gap-2 items-end flex-wrap sm:flex-nowrap">
+                <div className="flex-1 min-w-[130px]">
                   <label className="field-label">Od</label>
                   <input
                     type="date"
                     value={searchParams.get('from') ?? ''}
                     onChange={(e) => set('from', e.target.value)}
                     className="field-input"
-                    style={{ width: 'auto' }}
                   />
                 </div>
-                <div>
+                <div className="flex-1 min-w-[130px]">
                   <label className="field-label">Do</label>
                   <input
                     type="date"
                     value={searchParams.get('to') ?? ''}
                     onChange={(e) => set('to', e.target.value)}
                     className="field-input"
-                    style={{ width: 'auto' }}
                   />
                 </div>
               </div>
@@ -63,13 +61,12 @@ export default function FilterBar({
           }
 
           return (
-            <div key={field.key}>
+            <div key={field.key} className="min-w-[130px]">
               <label className="field-label">{field.label}</label>
               <select
                 value={searchParams.get(field.key) ?? ''}
                 onChange={(e) => set(field.key, e.target.value)}
                 className="field-input"
-                style={{ width: 'auto' }}
               >
                 <option value="">Vše</option>
                 {field.options.map((o) => (

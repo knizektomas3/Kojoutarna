@@ -69,19 +69,19 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
       </div>
 
       {/* Graf snášky po měsících */}
-      <div className="card p-5">
+      <div className="card p-4 sm:p-5">
         <h2 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>Snáška po měsících</h2>
         {monthlyProduction.length === 0 ? (
           <p className="text-sm text-center py-8" style={{ color: 'var(--text-subtle)' }}>Žádná data</p>
         ) : (
           <div onMouseDown={e => e.preventDefault()}>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyProduction} margin={{ top: 4, right: 4, left: -10, bottom: 10 }}>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={monthlyProduction} margin={{ top: 4, right: 4, left: 4, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 10, angle: -45, textAnchor: 'end', dy: 4 }} height={55} interval={0} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 9, angle: -45, textAnchor: 'end', dy: 4 }} height={55} interval={0} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} width={32} />
                 <Tooltip formatter={(v) => Number(v).toLocaleString('cs-CZ') + ' vajec'} cursor={{ fill: 'var(--surface-alt)' }} />
-                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8 }} />
+                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8, fontSize: 12 }} />
                 {genNames.map((g, i) => (
                   <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
                 ))}

@@ -31,12 +31,12 @@ export default function DashboardClient(props: Props) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-0 border-b" style={{ borderColor: 'var(--border)' }}>
+      <div className="flex items-center overflow-x-auto border-b" style={{ borderColor: 'var(--border)', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap"
+            className="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap flex-shrink-0"
             style={
               tab === t.key
                 ? { borderColor: 'var(--accent)', color: 'var(--accent)' }

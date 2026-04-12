@@ -98,7 +98,7 @@ export default function GenerationsTab({ generations }: { generations: Generatio
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <div>
             <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Zahájení</p>
             <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>{fmt(g.started_at)}</p>
