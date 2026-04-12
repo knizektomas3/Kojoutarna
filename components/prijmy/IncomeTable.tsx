@@ -33,41 +33,52 @@ export default function IncomeTable({
     router.refresh()
   }
 
-  const pageTotal = incomes.reduce((s, i) => s + i.amount, 0)
-
   if (incomes.length === 0) {
-    return <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <p className="text-gray-400 text-sm text-center py-4">Žádné záznamy</p>
-    </div>
+    return (
+      <div className="card p-5">
+        <p className="text-sm text-center py-4" style={{ color: 'var(--text-subtle)' }}>Žádné záznamy</p>
+      </div>
+    )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b">
+        <table className="table-base">
+          <thead>
             <tr>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Datum</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Generace</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Zákazník</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Typ</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">Částka</th>
-              <th className="px-4 py-3"></th>
+              <th>Datum</th>
+              <th>Generace</th>
+              <th>Zákazník</th>
+              <th>Typ</th>
+              <th className="text-right">Částka</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {incomes.map((i) => (
-              <tr key={i.id} className="border-b border-gray-50 hover:bg-gray-50">
-                <td className="px-4 py-3">{new Date(i.date).toLocaleDateString('cs-CZ')}</td>
-                <td className="px-4 py-3 text-gray-600">{(i.generation as any)?.name ?? '—'}</td>
-                <td className="px-4 py-3">{i.customer_name ?? '—'}</td>
-                <td className="px-4 py-3">
-                  <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{i.customer_type}</span>
+              <tr key={i.id}>
+                <td>{new Date(i.date).toLocaleDateString('cs-CZ')}</td>
+                <td style={{ color: 'var(--text-muted)' }}>{(i.generation as any)?.name ?? '—'}</td>
+                <td>{i.customer_name ?? '—'}</td>
+                <td>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{ backgroundColor: 'var(--surface-alt)', color: 'var(--text-muted)' }}>
+                    {i.customer_type}
+                  </span>
                 </td>
-                <td className="px-4 py-3 text-right font-medium text-green-600">{fmt(i.amount)}</td>
-                <td className="px-4 py-3 text-right">
-                  <button onClick={() => handleDelete(i.id)} disabled={deleting === i.id}
-                    className="text-gray-300 hover:text-red-400 transition-colors text-xs">✕</button>
+                <td className="text-right font-semibold tabular-nums" style={{ color: '#16a34a' }}>{fmt(i.amount)}</td>
+                <td className="text-right">
+                  <button
+                    onClick={() => handleDelete(i.id)}
+                    disabled={deleting === i.id}
+                    className="text-sm transition-colors"
+                    style={{ color: 'var(--border-strong)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--border-strong)' }}
+                  >
+                    ✕
+                  </button>
                 </td>
               </tr>
             ))}

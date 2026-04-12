@@ -38,13 +38,14 @@ export default function ProductionForm({ generations }: { generations: Generatio
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-gray-700">Přidat záznam</h2>
+    <div className="card p-5">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="font-semibold text-sm" style={{ color: 'var(--text)' }}>Přidat záznam</h2>
         <button
           type="button"
           onClick={() => setShowGenModal(true)}
-          className="text-xs text-amber-700 hover:underline"
+          className="text-xs font-medium transition-colors"
+          style={{ color: 'var(--accent)' }}
         >
           + Nová generace
         </button>
@@ -52,31 +53,18 @@ export default function ProductionForm({ generations }: { generations: Generatio
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Datum</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-          />
+          <label className="field-label">Datum</label>
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="field-input" />
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Generace</label>
-          <select
-            value={generationId}
-            onChange={(e) => setGenerationId(e.target.value)}
-            required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-          >
+          <label className="field-label">Generace</label>
+          <select value={generationId} onChange={(e) => setGenerationId(e.target.value)} required className="field-input">
             <option value="">— vyberte —</option>
-            {generations.map((g) => (
-              <option key={g.id} value={g.id}>{g.name}</option>
-            ))}
+            {generations.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Počet vajec</label>
+          <label className="field-label">Počet vajec</label>
           <input
             type="number"
             min="0"
@@ -84,16 +72,12 @@ export default function ProductionForm({ generations }: { generations: Generatio
             onChange={(e) => setEggCount(e.target.value)}
             required
             placeholder="např. 22"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className="field-input"
           />
         </div>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
-        <button
-          type="submit"
-          disabled={saving}
-          className="w-full bg-amber-700 hover:bg-amber-600 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
-        >
-          {saving ? 'Ukládám…' : 'Uložit'}
+        {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
+        <button type="submit" disabled={saving} className="btn-primary">
+          {saving ? 'Ukládám…' : 'Uložit záznam'}
         </button>
       </form>
 

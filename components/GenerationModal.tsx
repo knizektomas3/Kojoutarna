@@ -36,56 +36,49 @@ export default function GenerationModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
-        <h2 className="font-bold text-lg mb-4">Nová generace</h2>
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="card w-full max-w-sm p-6" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+        <h2 className="font-bold text-base mb-5" style={{ color: 'var(--text)' }}>Nová generace</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Název</label>
+            <label className="field-label">Název</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="např. Třetí"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="field-input"
+              autoFocus
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Datum zahájení</label>
+            <label className="field-label">Datum zahájení</label>
             <input
               type="date"
               value={startedAt}
               onChange={(e) => setStartedAt(e.target.value)}
               required
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="field-input"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Počet slepic</label>
+            <label className="field-label">Počet slepic</label>
             <input
               type="number"
               min="1"
               value={henCount}
               onChange={(e) => setHenCount(e.target.value)}
               placeholder="volitelné"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="field-input"
             />
           </div>
-          {error && <p className="text-red-500 text-xs">{error}</p>}
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
-            >
+          {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1">
               Zrušit
             </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex-1 bg-amber-700 hover:bg-amber-600 text-white rounded-lg px-4 py-2 text-sm font-medium disabled:opacity-50"
-            >
+            <button type="submit" disabled={saving} className="btn-primary flex-1">
               {saving ? 'Ukládám…' : 'Vytvořit'}
             </button>
           </div>

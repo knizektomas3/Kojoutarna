@@ -20,17 +20,18 @@ export default function DashboardClient(props: Props) {
   const [tab, setTab] = useState<'produkce' | 'finance'>('produkce')
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-1 border-b border-gray-200">
+    <div className="space-y-5">
+      <div className="flex items-center gap-0 border-b" style={{ borderColor: 'var(--border)' }}>
         {(['produkce', 'finance'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-5 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
+            className="px-5 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px"
+            style={
               tab === t
-                ? 'border-amber-700 text-amber-800'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+                ? { borderColor: 'var(--accent)', color: 'var(--accent)' }
+                : { borderColor: 'transparent', color: 'var(--text-muted)' }
+            }
           >
             {t === 'produkce' ? '🥚 Přehled produkce' : '💰 Finanční přehled'}
           </button>

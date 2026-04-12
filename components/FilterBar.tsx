@@ -29,32 +29,33 @@ export default function FilterBar({
   )
 
   const reset = () => router.push(pathname)
-
   const hasFilters = searchParams.toString() !== ''
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div className="card p-4">
       <div className="flex flex-wrap gap-3 items-end">
         {fields.map((field) => {
           if (field.type === 'date-range') {
             return (
               <div key="date-range" className="flex gap-2 items-end">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Od</label>
+                  <label className="field-label">Od</label>
                   <input
                     type="date"
                     value={searchParams.get('from') ?? ''}
                     onChange={(e) => set('from', e.target.value)}
-                    className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="field-input"
+                    style={{ width: 'auto' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Do</label>
+                  <label className="field-label">Do</label>
                   <input
                     type="date"
                     value={searchParams.get('to') ?? ''}
                     onChange={(e) => set('to', e.target.value)}
-                    className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="field-input"
+                    style={{ width: 'auto' }}
                   />
                 </div>
               </div>
@@ -63,11 +64,12 @@ export default function FilterBar({
 
           return (
             <div key={field.key}>
-              <label className="block text-xs text-gray-500 mb-1">{field.label}</label>
+              <label className="field-label">{field.label}</label>
               <select
                 value={searchParams.get(field.key) ?? ''}
                 onChange={(e) => set(field.key, e.target.value)}
-                className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="field-input"
+                style={{ width: 'auto' }}
               >
                 <option value="">Vše</option>
                 {field.options.map((o) => (
@@ -82,7 +84,8 @@ export default function FilterBar({
           <div className="flex items-end ml-auto">
             <button
               onClick={reset}
-              className="text-sm text-amber-700 hover:underline pb-1.5"
+              className="text-sm font-medium pb-1.5 transition-colors"
+              style={{ color: 'var(--accent)' }}
             >
               Zrušit filtry
             </button>

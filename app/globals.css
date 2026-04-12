@@ -1,13 +1,233 @@
 @import "tailwindcss";
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #fafaf8;
-  color: #1a1a1a;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-family-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
+/* ── Color tokens ─────────────────────────────────────── */
+:root {
+  --bg:            #f3f4f6;
+  --surface:       #ffffff;
+  --surface-alt:   #f9fafb;
+  --border:        #e5e7eb;
+  --border-strong: #d1d5db;
+  --text:          #111827;
+  --text-muted:    #6b7280;
+  --text-subtle:   #9ca3af;
+  --accent:        #b45309;
+  --accent-hover:  #92400e;
+  --accent-text:   #ffffff;
+  --input-bg:      #ffffff;
+  --ring:          rgba(180, 83, 9, 0.25);
+  --shadow-sm:     0 1px 2px rgba(0,0,0,0.05);
+  --shadow:        0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --nav-bg:        #1c1009;
+  --nav-text:      #fde68a;
+  --nav-active:    #92400e;
+  --nav-hover:     rgba(255,255,255,0.07);
+  --chart-grid:    #f0f0f0;
+  --chart-tick:    #9ca3af;
+}
+
+.dark {
+  --bg:            #0d0f14;
+  --surface:       #161a22;
+  --surface-alt:   #1d2129;
+  --border:        #272c38;
+  --border-strong: #353b4a;
+  --text:          #f1f5f9;
+  --text-muted:    #94a3b8;
+  --text-subtle:   #64748b;
+  --accent:        #f59e0b;
+  --accent-hover:  #fbbf24;
+  --accent-text:   #1c0a00;
+  --input-bg:      #1d2129;
+  --ring:          rgba(245, 158, 11, 0.3);
+  --shadow-sm:     0 1px 2px rgba(0,0,0,0.3);
+  --shadow:        0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+  --nav-bg:        #0d0f14;
+  --nav-text:      #fde68a;
+  --nav-active:    #78350f;
+  --nav-hover:     rgba(255,255,255,0.05);
+  --chart-grid:    #272c38;
+  --chart-tick:    #64748b;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* ── Component classes ───────────────────────────────── */
+@layer components {
+  .card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface-alt);
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.375rem;
+  }
+
+  .field-input {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    appearance: none;
+  }
+
+  .field-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  .field-input::placeholder {
+    color: var(--text-subtle);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border-radius: 0.5rem;
+    padding: 0.5625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: background-color 0.15s, opacity 0.15s;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.15s, color 0.15s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--surface-alt);
+    color: var(--text);
+  }
+
+  .table-base {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+  }
+
+  .table-base thead th {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-subtle);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    background-color: var(--surface-alt);
+  }
+
+  .table-base thead th:last-child,
+  .table-base thead th.text-right {
+    text-align: right;
+  }
+
+  .table-base tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.1s;
+  }
+
+  .table-base tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .table-base tbody tr:hover {
+    background-color: var(--surface-alt);
+  }
+
+  .table-base td {
+    padding: 0.75rem 1.25rem;
+    color: var(--text);
+  }
+}
+
+/* ── Recharts focus ──────────────────────────────────── */
 .recharts-wrapper:focus,
 .recharts-wrapper svg:focus,
 .recharts-surface:focus {
   outline: none;
+}
+
+/* ── Recharts dark mode ──────────────────────────────── */
+.recharts-cartesian-grid line {
+  stroke: var(--chart-grid);
+}
+.recharts-cartesian-axis-tick text {
+  fill: var(--chart-tick);
+}
+.recharts-legend-item-text {
+  color: var(--text-muted) !important;
+}
+.recharts-default-tooltip {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: var(--shadow) !important;
+}
+.recharts-tooltip-label {
+  color: var(--text-muted) !important;
+}
+.recharts-tooltip-item {
+  color: var(--text) !important;
 }

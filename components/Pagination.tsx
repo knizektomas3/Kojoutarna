@@ -27,7 +27,6 @@ export default function Pagination({
   const from = (page - 1) * pageSize + 1
   const to = Math.min(page * pageSize, total)
 
-  // Výpočet viditelných stránek (max 5 kolem aktuální)
   const pages: (number | '...')[] = []
   if (totalPages <= 7) {
     for (let i = 1; i <= totalPages; i++) pages.push(i)
@@ -39,31 +38,43 @@ export default function Pagination({
     pages.push(totalPages)
   }
 
+  const btnBase: React.CSSProperties = {
+    borderRadius: '0.5rem',
+    border: '1px solid var(--border)',
+    fontSize: '0.8125rem',
+    transition: 'background-color 0.1s, color 0.1s',
+    cursor: 'pointer',
+  }
+
   return (
     <div className="flex items-center justify-between mt-3">
-      <span className="text-sm text-gray-400">
+      <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>
         {from}–{to} z {total}
       </span>
       <div className="flex items-center gap-1">
         <button
           onClick={() => goTo(page - 1)}
           disabled={page === 1}
-          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50 cursor-pointer disabled:cursor-default"
+          style={{ ...btnBase, padding: '0.25rem 0.625rem', opacity: page === 1 ? 0.3 : 1, cursor: page === 1 ? 'default' : 'pointer' }}
+          onMouseEnter={(e) => { if (page !== 1) e.currentTarget.style.backgroundColor = 'var(--surface-alt)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '' }}
         >
           ←
         </button>
         {pages.map((p, i) =>
           p === '...' ? (
-            <span key={`dots-${i}`} className="px-2 text-gray-400 text-sm">…</span>
+            <span key={`dots-${i}`} className="px-2 text-sm" style={{ color: 'var(--text-subtle)' }}>…</span>
           ) : (
             <button
               key={p}
               onClick={() => goTo(p as number)}
-              className={`w-8 h-8 rounded-lg text-sm border transition-colors cursor-pointer ${
+              style={
                 p === page
-                  ? 'bg-amber-700 text-white border-amber-700'
-                  : 'border-gray-200 hover:bg-gray-50'
-              }`}
+                  ? { ...btnBase, width: '2rem', height: '2rem', backgroundColor: 'var(--accent)', color: 'var(--accent-text)', borderColor: 'var(--accent)', fontWeight: 600 }
+                  : { ...btnBase, width: '2rem', height: '2rem', color: 'var(--text)' }
+              }
+              onMouseEnter={(e) => { if (p !== page) e.currentTarget.style.backgroundColor = 'var(--surface-alt)' }}
+              onMouseLeave={(e) => { if (p !== page) e.currentTarget.style.backgroundColor = '' }}
             >
               {p}
             </button>
@@ -72,7 +83,9 @@ export default function Pagination({
         <button
           onClick={() => goTo(page + 1)}
           disabled={page === totalPages}
-          className="px-2 py-1 rounded-lg text-sm border border-gray-200 disabled:opacity-30 hover:bg-gray-50 cursor-pointer disabled:cursor-default"
+          style={{ ...btnBase, padding: '0.25rem 0.625rem', opacity: page === totalPages ? 0.3 : 1, cursor: page === totalPages ? 'default' : 'pointer' }}
+          onMouseEnter={(e) => { if (page !== totalPages) e.currentTarget.style.backgroundColor = 'var(--surface-alt)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '' }}
         >
           →
         </button>

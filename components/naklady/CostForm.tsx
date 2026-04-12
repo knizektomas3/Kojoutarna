@@ -54,59 +54,57 @@ export default function CostForm({ generations }: { generations: Generation[] })
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <h2 className="font-semibold text-gray-700 mb-4">Přidat náklad</h2>
+    <div className="card p-5">
+      <h2 className="font-semibold text-sm mb-5" style={{ color: 'var(--text)' }}>Přidat náklad</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Datum</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <label className="field-label">Datum</label>
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="field-input" />
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Generace</label>
-          <select value={generationId} onChange={(e) => setGenerationId(e.target.value)} required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+          <label className="field-label">Generace</label>
+          <select value={generationId} onChange={(e) => setGenerationId(e.target.value)} required className="field-input">
             <option value="">— vyberte —</option>
             {generations.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Typ nákladu</label>
+          <label className="field-label">Typ nákladu</label>
           <div className="flex gap-2">
             {(['Provozní', 'Pořizovací'] as const).map((cat) => (
-              <button key={cat} type="button"
+              <button
+                key={cat}
+                type="button"
                 onClick={() => handleCategoryChange(cat)}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                className="flex-1 py-2 rounded-lg text-sm font-medium border transition-colors"
+                style={
                   category === cat
-                    ? 'bg-amber-700 text-white border-amber-700'
-                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                }`}>
+                    ? { backgroundColor: 'var(--accent)', color: 'var(--accent-text)', borderColor: 'var(--accent)' }
+                    : { backgroundColor: 'var(--surface)', color: 'var(--text-muted)', borderColor: 'var(--border)' }
+                }
+              >
                 {cat}
               </button>
             ))}
           </div>
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Kategorie</label>
-          <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+          <label className="field-label">Kategorie</label>
+          <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)} className="field-input">
             {SUBCATEGORIES[category].map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Částka (Kč)</label>
-          <input type="number" min="1" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="např. 3500"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <label className="field-label">Částka (Kč)</label>
+          <input type="number" min="1" value={amount} onChange={(e) => setAmount(e.target.value)} required placeholder="např. 3500" className="field-input" />
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Poznámka</label>
-          <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="volitelné"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <label className="field-label">Poznámka</label>
+          <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="volitelné" className="field-input" />
         </div>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
-        <button type="submit" disabled={saving}
-          className="w-full bg-amber-700 hover:bg-amber-600 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50">
-          {saving ? 'Ukládám…' : 'Uložit'}
+        {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
+        <button type="submit" disabled={saving} className="btn-primary">
+          {saving ? 'Ukládám…' : 'Uložit náklad'}
         </button>
       </form>
     </div>

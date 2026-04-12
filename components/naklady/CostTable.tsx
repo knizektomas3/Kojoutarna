@@ -33,45 +33,56 @@ export default function CostTable({
     router.refresh()
   }
 
-  const pageSum = costs.reduce((s, c) => s + c.amount, 0)
-  const acquisition = costs.filter((c) => c.cost_category === 'Pořizovací').reduce((s, c) => s + c.amount, 0)
-  const operational = costs.filter((c) => c.cost_category === 'Provozní').reduce((s, c) => s + c.amount, 0)
-
   if (costs.length === 0) {
-    return <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <p className="text-gray-400 text-sm text-center py-4">Žádné záznamy</p>
-    </div>
+    return (
+      <div className="card p-5">
+        <p className="text-sm text-center py-4" style={{ color: 'var(--text-subtle)' }}>Žádné záznamy</p>
+      </div>
+    )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b">
+        <table className="table-base">
+          <thead>
             <tr>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Datum</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Generace</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Typ</th>
-              <th className="text-left px-4 py-3 text-gray-500 font-medium">Kategorie</th>
-              <th className="text-right px-4 py-3 text-gray-500 font-medium">Částka</th>
-              <th className="px-4 py-3"></th>
+              <th>Datum</th>
+              <th>Generace</th>
+              <th>Typ</th>
+              <th>Kategorie</th>
+              <th className="text-right">Částka</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {costs.map((c) => (
-              <tr key={c.id} className="border-b border-gray-50 hover:bg-gray-50">
-                <td className="px-4 py-3">{new Date(c.date).toLocaleDateString('cs-CZ')}</td>
-                <td className="px-4 py-3 text-gray-600">{(c.generation as any)?.name ?? '—'}</td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    c.cost_category === 'Pořizovací' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
-                  }`}>{c.cost_category}</span>
+              <tr key={c.id}>
+                <td>{new Date(c.date).toLocaleDateString('cs-CZ')}</td>
+                <td style={{ color: 'var(--text-muted)' }}>{(c.generation as any)?.name ?? '—'}</td>
+                <td>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={
+                      c.cost_category === 'Pořizovací'
+                        ? { backgroundColor: 'rgba(139,92,246,0.12)', color: '#7c3aed' }
+                        : { backgroundColor: 'rgba(59,130,246,0.12)', color: '#2563eb' }
+                    }>
+                    {c.cost_category}
+                  </span>
                 </td>
-                <td className="px-4 py-3">{c.cost_subcategory}</td>
-                <td className="px-4 py-3 text-right font-medium text-red-500">{fmt(c.amount)}</td>
-                <td className="px-4 py-3 text-right">
-                  <button onClick={() => handleDelete(c.id)} disabled={deleting === c.id}
-                    className="text-gray-300 hover:text-red-400 transition-colors text-xs">✕</button>
+                <td style={{ color: 'var(--text-muted)' }}>{c.cost_subcategory}</td>
+                <td className="text-right font-semibold tabular-nums" style={{ color: '#ef4444' }}>{fmt(c.amount)}</td>
+                <td className="text-right">
+                  <button
+                    onClick={() => handleDelete(c.id)}
+                    disabled={deleting === c.id}
+                    className="text-sm transition-colors"
+                    style={{ color: 'var(--border-strong)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--border-strong)' }}
+                  >
+                    ✕
+                  </button>
                 </td>
               </tr>
             ))}
