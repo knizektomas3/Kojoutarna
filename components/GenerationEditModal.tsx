@@ -8,9 +8,11 @@ import { useToast } from '@/components/Toast'
 
 export default function GenerationEditModal({
   generation,
+  onUpdated,
   onClose,
 }: {
   generation: Generation
+  onUpdated?: (updated: Generation) => void
   onClose: () => void
 }) {
   const router = useRouter()
@@ -47,8 +49,17 @@ export default function GenerationEditModal({
     setSaving(false)
     if (err) { setError(err.message); return }
     toast('Generace byla upravena')
+    onUpdated?.({
+      ...generation,
+      name,
+      breed: breed || null,
+      started_at: startedAt,
+      hen_count: henCount ? parseInt(henCount) : null,
+      notes: notes || null,
+      ended_at: ended ? endedAt : null,
+    })
     router.refresh()
-    onClose()
+    if (!onUpdated) onClose()
   }
 
   return (

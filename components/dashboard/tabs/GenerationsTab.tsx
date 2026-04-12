@@ -25,19 +25,26 @@ export default function GenerationsTab({ generations }: { generations: Generatio
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
+  const [gens, setGens] = useState<Generation[]>(generations)
   const [editing, setEditing] = useState<Generation | null>(null)
   const [endingId, setEndingId] = useState<string | null>(null)
+
+  const handleUpdated = (updated: Generation) => {
+    setGens((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
+    setEditing(null)
+  }
 
   const handleEnd = async (id: string) => {
     const today = new Date().toISOString().split('T')[0]
     await supabase.from('generations').update({ ended_at: today }).eq('id', id)
+    setGens((prev) => prev.map((g) => (g.id === id ? { ...g, ended_at: today } : g)))
     setEndingId(null)
     toast('Generace byla ukončena')
     router.refresh()
   }
 
-  const active = generations.filter((g) => !g.ended_at)
-  const ended = generations.filter((g) => g.ended_at)
+  const active = gens.filter((g) => !g.ended_at)
+  const ended = gens.filter((g) => g.ended_at)
 
   const GenCard = ({ g }: { g: Generation }) => {
     const isActive = !g.ended_at
@@ -146,13 +153,13 @@ export default function GenerationsTab({ generations }: { generations: Generatio
         </div>
       )}
 
-      {generations.length === 0 && (
+      {gens.length === 0 && (
         <div className="card p-8 text-center">
           <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>Zatím žádné generace</p>
         </div>
       )}
 
-      {editing && <GenerationEditModal generation={editing} onClose={() => setEditing(null)} />}
+      {editing && <GenerationEditModal generation={editing} onUpdated={handleUpdated} onClose={() => setEditing(null)} />}
       {endingId && (
         <ConfirmModal
           message="Ukončit tuto generaci k dnešnímu dni?"
