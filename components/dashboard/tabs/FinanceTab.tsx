@@ -76,13 +76,13 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
           <p className="text-gray-400 text-sm text-center py-8">Žádná data</p>
         ) : (
           <div onMouseDown={e => e.preventDefault()}>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={monthlySales} margin={{ top: 4, right: 4, left: 10, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={monthlySales} margin={{ top: 4, right: 4, left: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 10, angle: -45, textAnchor: 'end', dy: 4 }} height={50} interval={0} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, angle: -45, textAnchor: 'end', dy: 4 }} height={55} interval={0} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v) => fmt(Number(v))} />
-                <Legend />
+                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8 }} />
                 {genNames.map((g, i) => (
                   <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
                 ))}
