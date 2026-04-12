@@ -59,14 +59,14 @@ export default async function PrijmyPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-amber-900">💰 Příjmy</h1>
+      <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>💰 Příjmy</h1>
       <FilterBar fields={filterFields} resultCount={count ?? 0} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <IncomeForm generations={generations} customers={customers} />
         </div>
         <div className="lg:col-span-2">
-          <IncomeTable incomes={incomes ?? []} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
+          <IncomeTable incomes={incomes ?? []} generations={generations} customers={customers} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
         </div>
       </div>
     </div>

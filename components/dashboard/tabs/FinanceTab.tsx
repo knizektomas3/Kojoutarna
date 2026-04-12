@@ -49,21 +49,34 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
       </div>
 
       {/* Per-generace karty */}
-      {financialSummary.map((g, i) => (
-        <div key={g.name}>
-          <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: GEN_COLORS[i] }}>
-            {g.name} generace
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <StatCard label="Příjmy" value={g.income} neutral />
-            <StatCard label="Pořizovací náklady" value={-g.acquisitionCost} />
-            <StatCard label="Provozní náklady" value={-g.operationalCost} />
-            <StatCard label="Celkové náklady" value={-g.totalCost} />
-            <StatCard label="Provozní zisk/ztráta" value={g.operationalProfit} />
-            <StatCard label={g.totalProfit >= 0 ? 'Celkový zisk' : 'Celková ztráta'} value={g.totalProfit} />
+      {financialSummary.map((g, i) => {
+        const roi = g.acquisitionCost > 0 ? (g.totalProfit / g.acquisitionCost) * 100 : null
+        return (
+          <div key={g.name}>
+            <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: GEN_COLORS[i] }}>
+              {g.name} generace
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
+              <StatCard label="Příjmy" value={g.income} neutral />
+              <StatCard label="Pořizovací náklady" value={-g.acquisitionCost} />
+              <StatCard label="Provozní náklady" value={-g.operationalCost} />
+              <StatCard label="Celkové náklady" value={-g.totalCost} />
+              <StatCard label="Provozní zisk/ztráta" value={g.operationalProfit} />
+              <StatCard label={g.totalProfit >= 0 ? 'Celkový zisk' : 'Celková ztráta'} value={g.totalProfit} />
+              <div className="card p-4">
+                <p className="text-xs mb-1.5 font-medium" style={{ color: 'var(--text-muted)' }}>Návratnost (ROI)</p>
+                {roi === null ? (
+                  <p className="text-xl font-bold" style={{ color: 'var(--text-subtle)' }}>—</p>
+                ) : (
+                  <p className="text-xl font-bold tabular-nums" style={{ color: roi >= 0 ? '#16a34a' : '#ef4444' }}>
+                    {roi >= 0 ? '+' : ''}{roi.toFixed(0)} %
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
 
       {/* Graf prodeje po měsících */}
       <div className="card p-5">

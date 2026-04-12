@@ -42,14 +42,14 @@ export default async function SnaskaPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-amber-900">🥚 Snáška</h1>
+      <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>🥚 Snáška</h1>
       <FilterBar fields={filterFields} resultCount={count ?? 0} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <ProductionForm generations={generations} />
         </div>
         <div className="lg:col-span-2">
-          <ProductionTable productions={productions ?? []} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
+          <ProductionTable productions={productions ?? []} generations={generations} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
         </div>
       </div>
     </div>

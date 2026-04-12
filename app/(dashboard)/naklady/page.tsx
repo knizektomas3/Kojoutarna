@@ -58,14 +58,14 @@ export default async function NakladyPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-amber-900">🛒 Náklady</h1>
+      <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>🛒 Náklady</h1>
       <FilterBar fields={filterFields} resultCount={count ?? 0} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <CostForm generations={generations} />
         </div>
         <div className="lg:col-span-2">
-          <CostTable costs={costs ?? []} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
+          <CostTable costs={costs ?? []} generations={generations} page={page} total={count ?? 0} pageSize={PAGE_SIZE} />
         </div>
       </div>
     </div>

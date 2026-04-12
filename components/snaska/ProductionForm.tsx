@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Generation } from '@/types'
 import GenerationModal from '@/components/GenerationModal'
+import { useToast } from '@/components/Toast'
 
 export default function ProductionForm({ generations }: { generations: Generation[] }) {
   const router = useRouter()
   const supabase = createClient()
+  const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
   const [date, setDate] = useState(today)
@@ -34,6 +36,7 @@ export default function ProductionForm({ generations }: { generations: Generatio
     setSaving(false)
     if (err) { setError(err.message); return }
     setEggCount('')
+    toast('Záznam byl uložen')
     router.refresh()
   }
 
@@ -53,7 +56,12 @@ export default function ProductionForm({ generations }: { generations: Generatio
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="field-label">Datum</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="field-label" style={{ marginBottom: 0 }}>Datum</label>
+            {date !== today && (
+              <button type="button" onClick={() => setDate(today)} className="text-xs font-medium" style={{ color: 'var(--accent)' }}>Dnes</button>
+            )}
+          </div>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="field-input" />
         </div>
         <div>
