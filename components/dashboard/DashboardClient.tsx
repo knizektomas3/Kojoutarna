@@ -48,14 +48,14 @@ export default function DashboardClient(props: Props) {
         ))}
       </div>
 
-      {tab === 'produkce' && (
+      <div style={{ display: tab === 'produkce' ? 'block' : 'none' }}>
         <ProductionTab
           genNames={props.genNames}
           productionStats={props.productionStats}
           monthlyProduction={props.monthlyProduction}
         />
-      )}
-      {tab === 'finance' && (
+      </div>
+      <div style={{ display: tab === 'finance' ? 'block' : 'none' }}>
         <FinanceTab
           genNames={props.genNames}
           monthlySales={props.monthlySales}
@@ -64,10 +64,10 @@ export default function DashboardClient(props: Props) {
           financialSummary={props.financialSummary}
           totals={props.totals}
         />
-      )}
-      {tab === 'generace' && (
+      </div>
+      <div style={{ display: tab === 'generace' ? 'block' : 'none' }}>
         <GenerationsTab generations={props.generations} />
-      )}
+      </div>
     </div>
   )
 }
