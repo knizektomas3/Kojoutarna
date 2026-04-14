@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createIncome } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
 
@@ -17,8 +16,6 @@ export default function IncomeForm({
   generations: Generation[]
   customers: Customer[]
 }) {
-  const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
@@ -66,22 +63,18 @@ export default function IncomeForm({
     setError('')
 
     const customer = customers.find((c) => c.id === customerId)
-    const { data: { user } } = await supabase.auth.getUser()
-    const { error: err } = await supabase.from('incomes').insert({
-      user_id: user!.id,
+    const result = await createIncome({
       generation_id: generationId,
       date,
-      income_type: 'Prodej',
       amount: parseInt(amount),
       customer_name: customer?.name ?? null,
       customer_type: customerType,
     })
 
     setSaving(false)
-    if (err) { setError(err.message); return }
+    if (result.error) { setError(result.error); return }
     setAmount('')
     toast('Příjem byl uložen')
-    router.refresh()
   }
 
   return (

@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createCost } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
 
@@ -12,8 +11,6 @@ const SUBCATEGORIES = {
 }
 
 export default function CostForm({ generations }: { generations: Generation[] }) {
-  const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
@@ -37,9 +34,7 @@ export default function CostForm({ generations }: { generations: Generation[] })
     setSaving(true)
     setError('')
 
-    const { data: { user } } = await supabase.auth.getUser()
-    const { error: err } = await supabase.from('costs').insert({
-      user_id: user!.id,
+    const result = await createCost({
       generation_id: generationId,
       date,
       cost_category: category,
@@ -49,11 +44,10 @@ export default function CostForm({ generations }: { generations: Generation[] })
     })
 
     setSaving(false)
-    if (err) { setError(err.message); return }
+    if (result.error) { setError(result.error); return }
     setAmount('')
     setNotes('')
     toast('Náklad byl uložen')
-    router.refresh()
   }
 
   return (
