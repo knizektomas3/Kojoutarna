@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createIncome } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
@@ -16,6 +17,7 @@ export default function IncomeForm({
   generations: Generation[]
   customers: Customer[]
 }) {
+  const router = useRouter()
   const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
@@ -75,6 +77,7 @@ export default function IncomeForm({
     if (result.error) { setError(result.error); return }
     setAmount('')
     toast('Příjem byl uložen')
+    router.refresh()
   }
 
   return (
