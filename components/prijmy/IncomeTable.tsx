@@ -55,6 +55,14 @@ export default function IncomeTable({
     router.refresh()
   }
 
+  const GEN_ROW_COLORS = [
+    'rgba(217,119,6,0.07)',
+    'rgba(59,130,246,0.07)',
+    'rgba(16,185,129,0.07)',
+    'rgba(139,92,246,0.07)',
+  ]
+  const genIndexMap = Object.fromEntries(generations.map((g, i) => [g.id, i]))
+
   if (incomes.length === 0) {
     return (
       <div className="card p-5">
@@ -80,7 +88,7 @@ export default function IncomeTable({
             </thead>
             <tbody>
               {incomes.map((i) => (
-                <tr key={i.id}>
+                <tr key={i.id} style={{ backgroundColor: GEN_ROW_COLORS[genIndexMap[i.generation_id] ?? 0] }}>
                   <td>{new Date(i.date).toLocaleDateString('cs-CZ')}</td>
                   <td style={{ color: 'var(--text-muted)' }}>{(i.generation as any)?.name ?? '—'}</td>
                   <td>{i.customer_name ?? '—'}</td>

@@ -16,6 +16,7 @@ type Props = {
   salesByCustomerType: { name: string; value: number }[]
   financialSummary: { name: string; income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }[]
   totals: { income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }
+  avgEggsPerDay: Record<string, number>
 }
 
 const TABS = [
@@ -66,7 +67,7 @@ export default function DashboardClient(props: Props) {
         />
       </div>
       <div style={{ display: tab === 'generace' ? 'block' : 'none' }}>
-        <GenerationsTab generations={props.generations} />
+        <GenerationsTab generations={props.generations} avgEggsPerDay={props.avgEggsPerDay} />
       </div>
     </div>
   )

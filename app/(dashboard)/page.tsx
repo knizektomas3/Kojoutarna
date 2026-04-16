@@ -33,6 +33,16 @@ export default async function DashboardPage() {
   const monthStartStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
   const yearStartStr = `${today.getFullYear()}-01-01`
 
+  // ── Průměr vajec/den na generaci ─────────────────────────────────────
+  const avgEggsPerDay: Record<string, number> = {}
+  for (const g of generations) {
+    const gp = allProductions.filter(p => p.generation_id === g.id)
+    const total = gp.reduce((s, p) => s + p.egg_count, 0)
+    const end = g.ended_at ? new Date(g.ended_at) : new Date()
+    const days = Math.max(1, Math.round((end.getTime() - new Date(g.started_at).getTime()) / 86400000))
+    avgEggsPerDay[g.id] = total / days
+  }
+
   // ── Statistiky snášky ─────────────────────────────────────────────────
   const productionStats = generations.map(g => {
     const gp = allProductions.filter(p => p.generation_id === g.id)
@@ -116,6 +126,7 @@ export default async function DashboardPage() {
       salesByCustomerType={salesByCustomerType}
       financialSummary={financialSummary}
       totals={totals}
+      avgEggsPerDay={avgEggsPerDay}
     />
   )
 }

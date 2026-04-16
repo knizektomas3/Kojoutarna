@@ -47,6 +47,14 @@ export default function ProductionTable({
     router.refresh()
   }
 
+  const GEN_ROW_COLORS = [
+    'rgba(217,119,6,0.07)',
+    'rgba(59,130,246,0.07)',
+    'rgba(16,185,129,0.07)',
+    'rgba(139,92,246,0.07)',
+  ]
+  const genIndexMap = Object.fromEntries(generations.map((g, i) => [g.id, i]))
+
   if (productions.length === 0) {
     return (
       <div className="card p-5">
@@ -70,7 +78,7 @@ export default function ProductionTable({
             </thead>
             <tbody>
               {productions.map((p) => (
-                <tr key={p.id}>
+                <tr key={p.id} style={{ backgroundColor: GEN_ROW_COLORS[genIndexMap[p.generation_id] ?? 0] }}>
                   <td>{new Date(p.date).toLocaleDateString('cs-CZ')}</td>
                   <td style={{ color: 'var(--text-muted)' }}>{(p.generation as any)?.name ?? '—'}</td>
                   <td className="text-right font-medium tabular-nums">{p.egg_count}</td>

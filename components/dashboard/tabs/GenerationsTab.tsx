@@ -21,7 +21,7 @@ function fmt(d: string) {
   return new Date(d).toLocaleDateString('cs-CZ')
 }
 
-export default function GenerationsTab({ generations }: { generations: Generation[] }) {
+export default function GenerationsTab({ generations, avgEggsPerDay }: { generations: Generation[]; avgEggsPerDay: Record<string, number> }) {
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
@@ -47,6 +47,7 @@ export default function GenerationsTab({ generations }: { generations: Generatio
   const ended = gens.filter((g) => g.ended_at)
 
   const GenCard = ({ g }: { g: Generation }) => {
+    const avg = avgEggsPerDay[g.id] ?? 0
     const isActive = !g.ended_at
     const ageMs = new Date().getTime() - new Date(g.started_at).getTime()
     const ageDays = Math.floor(ageMs / 86400000) + 17 * 7
@@ -122,6 +123,12 @@ export default function GenerationsTab({ generations }: { generations: Generatio
               <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>{g.hen_count}</p>
             </div>
           )}
+          <div>
+            <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Průměr/den</p>
+            <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+              {avg > 0 ? `${avg.toFixed(1)} ks` : '—'}
+            </p>
+          </div>
           {g.notes && (
             <div className="col-span-2 sm:col-span-1">
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Poznámka</p>
