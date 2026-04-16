@@ -57,6 +57,7 @@ export default async function DashboardPage() {
   const salesByMonth: Record<string, Record<string, number>> = {}
   for (const i of allIncomes) {
     const m = i.date.slice(0, 7)
+    if (m < '2025-08') continue
     const g = (i.generation as any)?.name ?? '?'
     if (!salesByMonth[m]) salesByMonth[m] = {}
     salesByMonth[m][g] = (salesByMonth[m][g] || 0) + i.amount
