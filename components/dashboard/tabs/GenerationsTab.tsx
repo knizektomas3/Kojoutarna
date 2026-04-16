@@ -124,7 +124,7 @@ export default function GenerationsTab({ generations, avgEggsPerDay }: { generat
             </div>
           )}
           <div>
-            <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Průměr/den</p>
+            <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Průměr vajec/den</p>
             <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>
               {avg > 0 ? `${avg.toFixed(1)} ks` : '—'}
             </p>
