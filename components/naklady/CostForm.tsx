@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createCost } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
@@ -12,7 +11,6 @@ const SUBCATEGORIES = {
 }
 
 export default function CostForm({ generations }: { generations: Generation[] }) {
-  const router = useRouter()
   const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
@@ -50,7 +48,6 @@ export default function CostForm({ generations }: { generations: Generation[] })
     setAmount('')
     setNotes('')
     toast('Náklad byl uložen')
-    router.refresh()
   }
 
   return (

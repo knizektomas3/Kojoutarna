@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { refresh } from 'next/cache'
 
 export async function createIncome(data: {
   generation_id: string
@@ -21,8 +21,7 @@ export async function createIncome(data: {
 
   if (error) return { error: error.message }
 
-  revalidatePath('/prijmy')
-  revalidatePath('/')
+  refresh()
   return {}
 }
 
@@ -44,7 +43,6 @@ export async function createCost(data: {
 
   if (error) return { error: error.message }
 
-  revalidatePath('/naklady')
-  revalidatePath('/')
+  refresh()
   return {}
 }
