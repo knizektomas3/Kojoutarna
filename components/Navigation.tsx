@@ -36,12 +36,12 @@ function MoonIcon() {
   )
 }
 
-function DownloadIcon() {
+function FloppyIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-      <polyline points="7 10 12 15 17 10"/>
-      <line x1="12" y1="15" x2="12" y2="3"/>
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
     </svg>
   )
 }
@@ -100,18 +100,6 @@ export default function Navigation({ userEmail }: { userEmail: string }) {
               {userEmail}
             </span>
 
-            <a
-              href="/api/export"
-              download
-              title="Stáhnout zálohu (CSV)"
-              className="w-8 h-8 flex items-center justify-center rounded-md transition-colors"
-              style={{ color: 'var(--nav-text)', opacity: 0.75 }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'var(--nav-hover)'; (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = ''; (e.currentTarget as HTMLAnchorElement).style.opacity = '0.75' }}
-            >
-              <DownloadIcon />
-            </a>
-
             <button
               onClick={toggle}
               title={theme === 'dark' ? 'Světlý režim' : 'Tmavý režim'}
@@ -122,6 +110,18 @@ export default function Navigation({ userEmail }: { userEmail: string }) {
             >
               {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
             </button>
+
+            <a
+              href="/api/export"
+              download
+              title="Stáhnout zálohu (CSV)"
+              className="w-8 h-8 flex items-center justify-center rounded-md transition-colors"
+              style={{ color: 'var(--nav-text)', opacity: 0.75 }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'var(--nav-hover)'; (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = ''; (e.currentTarget as HTMLAnchorElement).style.opacity = '0.75' }}
+            >
+              <FloppyIcon />
+            </a>
 
             <button
               onClick={handleLogout}
