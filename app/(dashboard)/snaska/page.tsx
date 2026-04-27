@@ -19,7 +19,7 @@ export default async function SnaskaPage({ searchParams }: Props) {
 
   let query = supabase
     .from('productions')
-    .select('*, generation:generations(name)', { count: 'exact' })
+    .select('*, generation:generations(name, started_at)', { count: 'exact' })
     .eq('user_id', user!.id)
     .order('date', { ascending: false })
 
@@ -28,7 +28,14 @@ export default async function SnaskaPage({ searchParams }: Props) {
   if (params.generation) query = query.eq('generation_id', params.generation)
 
   const from = (page - 1) * PAGE_SIZE
-  const { data: productions, count } = await query.range(from, from + PAGE_SIZE - 1)
+  const { data: raw, count } = await query.range(from, from + PAGE_SIZE - 1)
+
+  const productions = (raw ?? []).sort((a, b) => {
+    if (a.date !== b.date) return a.date > b.date ? -1 : 1
+    const aStart = a.generation?.started_at ?? ''
+    const bStart = b.generation?.started_at ?? ''
+    return aStart < bStart ? -1 : aStart > bStart ? 1 : 0
+  })
 
   const filterFields = [
     { type: 'date-range' as const },
