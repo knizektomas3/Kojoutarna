@@ -3,6 +3,25 @@
 import { createClient } from '@/lib/supabase/server'
 import { refresh } from 'next/cache'
 
+export async function createProduction(data: {
+  generation_id: string
+  date: string
+  egg_count: number
+}): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { error } = await supabase.from('productions').upsert({
+    user_id: user!.id,
+    ...data,
+  }, { onConflict: 'user_id,generation_id,date' })
+
+  if (error) return { error: error.message }
+
+  refresh()
+  return {}
+}
+
 export async function createIncome(data: {
   generation_id: string
   date: string

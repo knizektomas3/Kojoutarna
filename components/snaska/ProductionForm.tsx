@@ -2,14 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createProduction } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import GenerationModal from '@/components/GenerationModal'
 import { useToast } from '@/components/Toast'
 
 export default function ProductionForm({ generations }: { generations: Generation[] }) {
   const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const today = new Date().toISOString().split('T')[0]
 
@@ -26,18 +25,16 @@ export default function ProductionForm({ generations }: { generations: Generatio
     setSaving(true)
     setError('')
 
-    const { error: err } = await supabase.from('productions').upsert({
+    const { error: err } = await createProduction({
       generation_id: generationId,
       date,
       egg_count: parseInt(eggCount),
-      user_id: (await supabase.auth.getUser()).data.user!.id,
-    }, { onConflict: 'user_id,generation_id,date' })
+    })
 
     setSaving(false)
-    if (err) { setError(err.message); return }
+    if (err) { setError(err); return }
     setEggCount('')
     toast('Záznam byl uložen')
-    router.refresh()
   }
 
   return (
