@@ -7,6 +7,7 @@ create table generations (
   started_at date not null,
   ended_at date,
   hen_count integer,
+  initial_hen_count integer,
   notes text,
   created_at timestamptz default now()
 );

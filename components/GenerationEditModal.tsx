@@ -23,6 +23,7 @@ export default function GenerationEditModal({
   const [breed, setBreed] = useState(generation.breed ?? '')
   const [startedAt, setStartedAt] = useState(generation.started_at)
   const [henCount, setHenCount] = useState(generation.hen_count ? String(generation.hen_count) : '')
+  const [initialHenCount, setInitialHenCount] = useState(generation.initial_hen_count ? String(generation.initial_hen_count) : '')
   const [notes, setNotes] = useState(generation.notes ?? '')
   const [ended, setEnded] = useState(!!generation.ended_at)
   const [endedAt, setEndedAt] = useState(generation.ended_at ?? new Date().toISOString().split('T')[0])
@@ -41,6 +42,7 @@ export default function GenerationEditModal({
         breed: breed || null,
         started_at: startedAt,
         hen_count: henCount ? parseInt(henCount) : null,
+        initial_hen_count: initialHenCount ? parseInt(initialHenCount) : null,
         notes: notes || null,
         ended_at: ended ? endedAt : null,
       })
@@ -55,6 +57,7 @@ export default function GenerationEditModal({
       breed: breed || null,
       started_at: startedAt,
       hen_count: henCount ? parseInt(henCount) : null,
+      initial_hen_count: initialHenCount ? parseInt(initialHenCount) : null,
       notes: notes || null,
       ended_at: ended ? endedAt : null,
     })
@@ -88,8 +91,12 @@ export default function GenerationEditModal({
             <input type="date" value={startedAt} onChange={(e) => setStartedAt(e.target.value)} required className="field-input" />
           </div>
           <div>
-            <label className="field-label">Počet slepic</label>
+            <label className="field-label">Aktuální počet slepic</label>
             <input type="number" min="1" value={henCount} onChange={(e) => setHenCount(e.target.value)} placeholder="volitelné" className="field-input" />
+          </div>
+          <div>
+            <label className="field-label">Původní počet slepic</label>
+            <input type="number" min="1" value={initialHenCount} onChange={(e) => setInitialHenCount(e.target.value)} placeholder="volitelné" className="field-input" />
           </div>
           <div>
             <label className="field-label">Poznámka</label>

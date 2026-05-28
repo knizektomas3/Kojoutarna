@@ -120,7 +120,12 @@ export default function GenerationsTab({ generations, avgEggsPerDay }: { generat
           {g.hen_count && (
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-subtle)' }}>Slepic</p>
-              <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>{g.hen_count}</p>
+              <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                {g.hen_count}
+                {g.initial_hen_count && g.initial_hen_count !== g.hen_count && (
+                  <span className="font-normal" style={{ color: 'var(--text-subtle)' }}> ({g.initial_hen_count})</span>
+                )}
+              </p>
             </div>
           )}
           <div>

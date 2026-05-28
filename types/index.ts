@@ -6,6 +6,7 @@ export type Generation = {
   started_at: string
   ended_at: string | null
   hen_count: number | null
+  initial_hen_count: number | null
   notes: string | null
   created_at: string
 }
