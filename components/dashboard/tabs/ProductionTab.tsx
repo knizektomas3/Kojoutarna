@@ -57,7 +57,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                 <th className="text-right">Tento měsíc</th>
                 <th className="text-right">Tento rok</th>
                 <th className="text-right">Celkem</th>
-                {showPct && <th className="text-right">Snáška %</th>}
+                {showPct && <th className="text-right">Týdenní snáška %</th>}
               </tr>
             </thead>
             <tbody>
