@@ -9,7 +9,7 @@ import type { Generation } from '@/types'
 type Props = {
   generations: Generation[]
   genNames: string[]
-  productionStats: { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number }[]
+  productionStats: { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; daysIntoWeek: number }[]
   monthlyProduction: Record<string, string | number>[]
   monthlySales: Record<string, string | number>[]
   salesByCustomer: { name: string; total: number }[]

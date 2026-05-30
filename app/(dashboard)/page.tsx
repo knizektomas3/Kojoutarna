@@ -48,6 +48,8 @@ export default async function DashboardPage() {
   yesterday.setDate(today.getDate() - 1)
   const yesterdayStr = yesterday.toISOString().split('T')[0]
 
+  const daysIntoWeek = today.getDay() === 0 ? 7 : today.getDay() // Po=1 … Ne=7
+
   const productionStats = generations.map(g => {
     const gp = allProductions.filter(p => p.generation_id === g.id)
     const sum = (from: string) => gp.filter(p => p.date >= from && p.date <= todayStr).reduce((s, p) => s + p.egg_count, 0)
@@ -60,7 +62,7 @@ export default async function DashboardPage() {
         missingDays = Math.round((yesterday.getTime() - new Date(lastProdDate).getTime()) / 86400000)
       }
     }
-    return { name: g.name, week: sum(weekStartStr), month: sum(monthStartStr), year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays }
+    return { name: g.name, week: sum(weekStartStr), month: sum(monthStartStr), year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, daysIntoWeek }
   })
 
   // ── Snáška po měsících ────────────────────────────────────────────────

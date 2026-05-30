@@ -7,7 +7,7 @@ import {
 
 const GEN_COLORS = ['#d97706', '#3b82f6', '#10b981', '#8b5cf6']
 
-type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number }
+type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; daysIntoWeek: number }
 
 type Props = {
   genNames: string[]
@@ -62,7 +62,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
             </thead>
             <tbody>
               {productionStats.map((g, i) => {
-                const weeklyAvg = g.week / 7
+                const weeklyAvg = g.week / g.daysIntoWeek
                 const pct = g.henCount && g.henCount > 0 ? (weeklyAvg / g.henCount) * 100 : null
                 return (
                   <tr key={g.name}>
