@@ -7,7 +7,7 @@ import {
 
 const GEN_COLORS = ['#d97706', '#3b82f6', '#10b981', '#8b5cf6']
 
-type ProductionStat = { name: string; week: number; month: number; year: number; total: number }
+type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number }
 
 type Props = {
   genNames: string[]
@@ -23,8 +23,26 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
     total: productionStats.reduce((s, g) => s + g.total, 0),
   }
 
+  const warnings = productionStats.filter(g => g.missingDays > 0)
+  const showPct = productionStats.some(g => g.henCount)
+
   return (
     <div className="space-y-5">
+      {/* Varování o chybějících záznamech */}
+      {warnings.length > 0 && (
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1"
+          style={{ backgroundColor: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.35)' }}
+        >
+          <p className="text-xs font-semibold" style={{ color: '#a16207' }}>Chybějící záznamy snášky</p>
+          {warnings.map(g => (
+            <p key={g.name} className="text-xs" style={{ color: '#92400e' }}>
+              {g.name} generace – nezadáno {g.missingDays === 1 ? '1 den' : `${g.missingDays} dny/dní`}
+            </p>
+          ))}
+        </div>
+      )}
+
       {/* Statistiky snášky */}
       <div className="card overflow-hidden">
         <div className="card-header">
@@ -39,21 +57,38 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                 <th className="text-right">Tento měsíc</th>
                 <th className="text-right">Tento rok</th>
                 <th className="text-right">Celkem</th>
+                {showPct && <th className="text-right">Snáška %</th>}
               </tr>
             </thead>
             <tbody>
-              {productionStats.map((g, i) => (
-                <tr key={g.name}>
-                  <td>
-                    <span className="inline-block w-2.5 h-2.5 rounded-full mr-2" style={{ background: GEN_COLORS[i] }} />
-                    <span className="font-medium">{g.name}</span>
-                  </td>
-                  <td className="text-right tabular-nums">{g.week.toLocaleString('cs-CZ')}</td>
-                  <td className="text-right tabular-nums">{g.month.toLocaleString('cs-CZ')}</td>
-                  <td className="text-right tabular-nums">{g.year.toLocaleString('cs-CZ')}</td>
-                  <td className="text-right tabular-nums font-semibold">{g.total.toLocaleString('cs-CZ')}</td>
-                </tr>
-              ))}
+              {productionStats.map((g, i) => {
+                const weeklyAvg = g.week / 7
+                const pct = g.henCount && g.henCount > 0 ? (weeklyAvg / g.henCount) * 100 : null
+                return (
+                  <tr key={g.name}>
+                    <td>
+                      <span className="inline-block w-2.5 h-2.5 rounded-full mr-2" style={{ background: GEN_COLORS[i] }} />
+                      <span className="font-medium">{g.name}</span>
+                    </td>
+                    <td className="text-right tabular-nums">{g.week.toLocaleString('cs-CZ')}</td>
+                    <td className="text-right tabular-nums">{g.month.toLocaleString('cs-CZ')}</td>
+                    <td className="text-right tabular-nums">{g.year.toLocaleString('cs-CZ')}</td>
+                    <td className="text-right tabular-nums font-semibold">{g.total.toLocaleString('cs-CZ')}</td>
+                    {showPct && (
+                      <td className="text-right tabular-nums">
+                        {pct !== null ? (
+                          <span
+                            className="font-medium"
+                            style={{ color: pct >= 70 ? '#16a34a' : pct >= 50 ? '#d97706' : '#ef4444' }}
+                          >
+                            {pct.toFixed(0)} %
+                          </span>
+                        ) : '—'}
+                      </td>
+                    )}
+                  </tr>
+                )
+              })}
               {productionStats.length > 1 && (
                 <tr style={{ borderTop: '2px solid var(--border-strong)', backgroundColor: 'var(--surface-alt)', fontWeight: 700 }}>
                   <td style={{ color: 'var(--text)' }}>Celkem</td>
@@ -61,6 +96,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                   <td className="text-right tabular-nums">{statTotals.month.toLocaleString('cs-CZ')}</td>
                   <td className="text-right tabular-nums">{statTotals.year.toLocaleString('cs-CZ')}</td>
                   <td className="text-right tabular-nums">{statTotals.total.toLocaleString('cs-CZ')}</td>
+                  {showPct && <td />}
                 </tr>
               )}
             </tbody>

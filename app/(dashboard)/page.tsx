@@ -44,10 +44,23 @@ export default async function DashboardPage() {
   }
 
   // ── Statistiky snášky ─────────────────────────────────────────────────
+  const yesterday = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
+  const yesterdayStr = yesterday.toISOString().split('T')[0]
+
   const productionStats = generations.map(g => {
     const gp = allProductions.filter(p => p.generation_id === g.id)
     const sum = (from: string) => gp.filter(p => p.date >= from && p.date <= todayStr).reduce((s, p) => s + p.egg_count, 0)
-    return { name: g.name, week: sum(weekStartStr), month: sum(monthStartStr), year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0) }
+    const lastProdDate = gp.length > 0 ? gp[gp.length - 1].date : null
+    let missingDays = 0
+    if (!g.ended_at) {
+      if (!lastProdDate) {
+        missingDays = Math.max(0, Math.round((yesterday.getTime() - new Date(g.started_at).getTime()) / 86400000))
+      } else if (lastProdDate < yesterdayStr) {
+        missingDays = Math.round((yesterday.getTime() - new Date(lastProdDate).getTime()) / 86400000)
+      }
+    }
+    return { name: g.name, week: sum(weekStartStr), month: sum(monthStartStr), year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays }
   })
 
   // ── Snáška po měsících ────────────────────────────────────────────────
