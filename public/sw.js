@@ -1,4 +1,4 @@
-const CACHE = 'kojoutarna-v1'
+const CACHE = 'kojoutarna-v2'
 
 self.addEventListener('install', () => {
   self.skipWaiting()
@@ -11,6 +11,11 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   // Navigační požadavky vždy ze sítě (SSR stránky)
   if (e.request.mode === 'navigate') {
+    e.respondWith(fetch(e.request))
+    return
+  }
+  // Supabase API requesty nikdy necachovat
+  if (e.request.url.includes('supabase.co')) {
     e.respondWith(fetch(e.request))
     return
   }
