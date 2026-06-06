@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import type { Generation } from '@/types'
 import GenerationEditModal from '@/components/GenerationEditModal'
 import ConfirmModal from '@/components/ConfirmModal'
 import { useToast } from '@/components/Toast'
+import { endGeneration } from '@/app/actions/records'
 
 function PencilIcon() {
   return (
@@ -23,7 +23,6 @@ function fmt(d: string) {
 
 export default function GenerationsTab({ generations, avgEggsPerDay }: { generations: Generation[]; avgEggsPerDay: Record<string, number> }) {
   const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const [gens, setGens] = useState<Generation[]>(generations)
   const [editing, setEditing] = useState<Generation | null>(null)
@@ -36,7 +35,12 @@ export default function GenerationsTab({ generations, avgEggsPerDay }: { generat
 
   const handleEnd = async (id: string) => {
     const today = new Date().toISOString().split('T')[0]
-    await supabase.from('generations').update({ ended_at: today }).eq('id', id)
+    const result = await endGeneration(id)
+    if (result.error) {
+      toast('Chyba: ' + result.error)
+      setEndingId(null)
+      return
+    }
     setGens((prev) => prev.map((g) => (g.id === id ? { ...g, ended_at: today } : g)))
     setEndingId(null)
     toast('Generace byla ukončena')
@@ -50,6 +54,7 @@ export default function GenerationsTab({ generations, avgEggsPerDay }: { generat
     const avg = avgEggsPerDay[g.id] ?? 0
     const isActive = !g.ended_at
     const ageMs = new Date().getTime() - new Date(g.started_at).getTime()
+    // started_at = datum naskladnění, slepice již tehdy měly ~17 týdnů
     const ageDays = Math.floor(ageMs / 86400000) + 17 * 7
     const ageWeeks = Math.floor(ageDays / 7)
 

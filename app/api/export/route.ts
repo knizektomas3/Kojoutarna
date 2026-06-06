@@ -26,10 +26,10 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Nepřihlášen' }, { status: 401 })
 
   const [generations, productions, incomes, costs] = await Promise.all([
-    supabase.from('generations').select('*').order('started_at'),
-    supabase.from('productions').select('*').order('date'),
-    supabase.from('incomes').select('*').order('date'),
-    supabase.from('costs').select('*').order('date'),
+    supabase.from('generations').select('*').eq('user_id', user.id).order('started_at'),
+    supabase.from('productions').select('*').eq('user_id', user.id).order('date'),
+    supabase.from('incomes').select('*').eq('user_id', user.id).order('date'),
+    supabase.from('costs').select('*').eq('user_id', user.id).order('date'),
   ])
 
   const sections = [

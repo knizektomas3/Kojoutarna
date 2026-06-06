@@ -113,3 +113,19 @@ export async function deleteCost(id: string): Promise<{ error?: string }> {
   refresh()
   return {}
 }
+
+export async function endGeneration(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
+
+  const today = new Date().toISOString().split('T')[0]
+  const { error } = await supabase.from('generations').update({ ended_at: today })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+
+  refresh()
+  return { }
+}
