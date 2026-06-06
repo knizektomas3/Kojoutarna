@@ -8,7 +8,9 @@ export default function PwaInit() {
       navigator.serviceWorker.register('/sw.js', {
         scope: '/',
         updateViaCache: 'none',
-      }).catch(() => {})
+      }).catch((err) => {
+        console.warn('Service worker registration failed:', err)
+      })
     }
   }, [])
   return null
