@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import type { Cost, Generation } from '@/types'
 import Pagination from '@/components/Pagination'
 import ConfirmModal from '@/components/ConfirmModal'
 import CostEditModal from './CostEditModal'
 import { useToast } from '@/components/Toast'
+import { deleteCost } from '@/app/actions/records'
 
 function fmt(n: number) {
   return n.toLocaleString('cs-CZ') + ' Kč'
@@ -36,7 +36,6 @@ export default function CostTable({
   pageSize: number
 }) {
   const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const [deleting, setDeleting] = useState<string | null>(null)
   const [confirmId, setConfirmId] = useState<string | null>(null)
@@ -45,8 +44,12 @@ export default function CostTable({
   const handleDelete = async (id: string) => {
     setDeleting(id)
     setConfirmId(null)
-    await supabase.from('costs').delete().eq('id', id)
+    const result = await deleteCost(id)
     setDeleting(null)
+    if (result.error) {
+      toast('Chyba: ' + result.error)
+      return
+    }
     toast('Záznam byl smazán')
     router.refresh()
   }

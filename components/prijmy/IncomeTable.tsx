@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import type { Generation, Income } from '@/types'
 import Pagination from '@/components/Pagination'
 import ConfirmModal from '@/components/ConfirmModal'
 import IncomeEditModal from './IncomeEditModal'
 import { useToast } from '@/components/Toast'
+import { deleteIncome } from '@/app/actions/records'
 
 function fmt(n: number) {
   return n.toLocaleString('cs-CZ') + ' Kč'
@@ -40,7 +40,6 @@ export default function IncomeTable({
   pageSize: number
 }) {
   const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const [deleting, setDeleting] = useState<string | null>(null)
   const [confirmId, setConfirmId] = useState<string | null>(null)
@@ -49,8 +48,12 @@ export default function IncomeTable({
   const handleDelete = async (id: string) => {
     setDeleting(id)
     setConfirmId(null)
-    await supabase.from('incomes').delete().eq('id', id)
+    const result = await deleteIncome(id)
     setDeleting(null)
+    if (result.error) {
+      toast('Chyba: ' + result.error)
+      return
+    }
     toast('Záznam byl smazán')
     router.refresh()
   }

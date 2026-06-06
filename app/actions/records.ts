@@ -10,9 +10,10 @@ export async function createProduction(data: {
 }): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
 
   const { error } = await supabase.from('productions').upsert({
-    user_id: user!.id,
+    user_id: user.id,
     ...data,
   }, { onConflict: 'user_id,generation_id,date' })
 
@@ -31,9 +32,10 @@ export async function createIncome(data: {
 }): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
 
   const { error } = await supabase.from('incomes').insert({
-    user_id: user!.id,
+    user_id: user.id,
     income_type: 'Prodej',
     ...data,
   })
@@ -54,11 +56,57 @@ export async function createCost(data: {
 }): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
 
   const { error } = await supabase.from('costs').insert({
-    user_id: user!.id,
+    user_id: user.id,
     ...data,
   })
+
+  if (error) return { error: error.message }
+
+  refresh()
+  return {}
+}
+
+export async function deleteProduction(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
+
+  const { error } = await supabase.from('productions').delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+
+  refresh()
+  return {}
+}
+
+export async function deleteIncome(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
+
+  const { error } = await supabase.from('incomes').delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+
+  refresh()
+  return {}
+}
+
+export async function deleteCost(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
+
+  const { error } = await supabase.from('costs').delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
 
   if (error) return { error: error.message }
 

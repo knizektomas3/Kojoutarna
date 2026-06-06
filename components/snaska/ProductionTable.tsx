@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import type { Generation, Production } from '@/types'
 import Pagination from '@/components/Pagination'
 import ConfirmModal from '@/components/ConfirmModal'
 import ProductionEditModal from './ProductionEditModal'
 import { useToast } from '@/components/Toast'
+import { deleteProduction } from '@/app/actions/records'
 
 function PencilIcon() {
   return (
@@ -32,7 +32,6 @@ export default function ProductionTable({
   pageSize: number
 }) {
   const router = useRouter()
-  const supabase = createClient()
   const { toast } = useToast()
   const [deleting, setDeleting] = useState<string | null>(null)
   const [confirmId, setConfirmId] = useState<string | null>(null)
@@ -41,8 +40,12 @@ export default function ProductionTable({
   const handleDelete = async (id: string) => {
     setDeleting(id)
     setConfirmId(null)
-    await supabase.from('productions').delete().eq('id', id)
+    const result = await deleteProduction(id)
     setDeleting(null)
+    if (result.error) {
+      toast('Chyba: ' + result.error)
+      return
+    }
     toast('Záznam byl smazán')
     router.refresh()
   }

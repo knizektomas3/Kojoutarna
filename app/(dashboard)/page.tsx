@@ -9,12 +9,13 @@ function formatMonth(ym: string) {
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const [generationsRes, allProductionsRes, allIncomesRes, allCostsRes] = await Promise.all([
-    supabase.from('generations').select('*').eq('user_id', user!.id).order('started_at'),
-    supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user!.id).order('date'),
-    supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user!.id).order('date'),
-    supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user!.id).order('date'),
+    supabase.from('generations').select('*').eq('user_id', user.id).order('started_at'),
+    supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
+    supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
+    supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
   ])
 
   const generations = generationsRes.data ?? []
@@ -82,7 +83,6 @@ export default async function DashboardPage() {
   const salesByMonth: Record<string, Record<string, number>> = {}
   for (const i of allIncomes) {
     const m = i.date.slice(0, 7)
-    if (m < '2025-08') continue
     const g = (i.generation as any)?.name ?? '?'
     if (!salesByMonth[m]) salesByMonth[m] = {}
     salesByMonth[m][g] = (salesByMonth[m][g] || 0) + i.amount
