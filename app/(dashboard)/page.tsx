@@ -82,6 +82,7 @@ export default async function DashboardPage() {
   // ── Prodej po měsících ────────────────────────────────────────────────
   const salesByMonth: Record<string, Record<string, number>> = {}
   for (const i of allIncomes) {
+    if (i.customer_name === 'Historická data') continue
     const m = i.date.slice(0, 7)
     const g = (i.generation as any)?.name ?? '?'
     if (!salesByMonth[m]) salesByMonth[m] = {}
