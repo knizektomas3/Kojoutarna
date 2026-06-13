@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { refresh } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 export async function createProduction(data: {
   generation_id: string
@@ -19,7 +19,7 @@ export async function createProduction(data: {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -42,7 +42,7 @@ export async function createIncome(data: {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -65,7 +65,7 @@ export async function createCost(data: {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -80,7 +80,7 @@ export async function deleteProduction(id: string): Promise<{ error?: string }> 
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -95,7 +95,7 @@ export async function deleteIncome(id: string): Promise<{ error?: string }> {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -110,7 +110,7 @@ export async function deleteCost(id: string): Promise<{ error?: string }> {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return {}
 }
 
@@ -126,6 +126,6 @@ export async function endGeneration(id: string): Promise<{ error?: string }> {
 
   if (error) return { error: error.message }
 
-  refresh()
+  revalidatePath('/', 'layout')
   return { }
 }
