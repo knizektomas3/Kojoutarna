@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import IncomeForm from '@/components/prijmy/IncomeForm'
+
+export const dynamic = 'force-dynamic'
 import IncomeTable from '@/components/prijmy/IncomeTable'
 import FilterBar from '@/components/FilterBar'
 

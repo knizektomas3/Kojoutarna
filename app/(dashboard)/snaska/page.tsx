@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import ProductionForm from '@/components/snaska/ProductionForm'
+
+export const dynamic = 'force-dynamic'
 import ProductionTable from '@/components/snaska/ProductionTable'
 import FilterBar from '@/components/FilterBar'
 

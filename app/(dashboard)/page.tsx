@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import DashboardClient from '@/components/dashboard/DashboardClient'
 
+export const dynamic = 'force-dynamic'
+
 function formatMonth(ym: string) {
   const [y, m] = ym.split('-').map(Number)
   return new Date(y, m - 1, 1).toLocaleDateString('cs-CZ', { month: 'short', year: '2-digit' })
