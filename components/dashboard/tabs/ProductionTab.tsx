@@ -7,7 +7,7 @@ import {
 
 const GEN_COLORS = ['#d97706', '#3b82f6', '#10b981', '#8b5cf6']
 
-type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; daysIntoWeek: number }
+type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; daysIntoWeek: number; monthTrend: number | null }
 
 type Props = {
   genNames: string[]
@@ -55,6 +55,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                 <th>Generace</th>
                 <th className="text-right">Tento týden</th>
                 <th className="text-right">Tento měsíc</th>
+                <th className="text-right" title="Změna oproti minulému měsíci">Trend</th>
                 <th className="text-right">Tento rok</th>
                 <th className="text-right">Celkem</th>
                 {showPct && <th className="text-right">Týdenní snáška %</th>}
@@ -72,6 +73,13 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                     </td>
                     <td className="text-right tabular-nums">{g.week.toLocaleString('cs-CZ')}</td>
                     <td className="text-right tabular-nums">{g.month.toLocaleString('cs-CZ')}</td>
+                    <td className="text-right tabular-nums">
+                      {g.monthTrend !== null ? (
+                        <span className="font-medium" style={{ color: g.monthTrend >= 0 ? '#16a34a' : '#ef4444' }}>
+                          {g.monthTrend >= 0 ? '▲' : '▼'} {Math.abs(g.monthTrend).toFixed(0)} %
+                        </span>
+                      ) : <span style={{ color: 'var(--text-subtle)' }}>—</span>}
+                    </td>
                     <td className="text-right tabular-nums">{g.year.toLocaleString('cs-CZ')}</td>
                     <td className="text-right tabular-nums font-semibold">{g.total.toLocaleString('cs-CZ')}</td>
                     {showPct && (
@@ -94,6 +102,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
                   <td style={{ color: 'var(--text)' }}>Celkem</td>
                   <td className="text-right tabular-nums">{statTotals.week.toLocaleString('cs-CZ')}</td>
                   <td className="text-right tabular-nums">{statTotals.month.toLocaleString('cs-CZ')}</td>
+                  <td />
                   <td className="text-right tabular-nums">{statTotals.year.toLocaleString('cs-CZ')}</td>
                   <td className="text-right tabular-nums">{statTotals.total.toLocaleString('cs-CZ')}</td>
                   {showPct && <td />}

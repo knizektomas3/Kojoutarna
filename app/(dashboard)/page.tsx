@@ -35,6 +35,8 @@ export default async function DashboardPage() {
   const weekStartStr = weekStart.toISOString().split('T')[0]
   const monthStartStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
   const yearStartStr = `${today.getFullYear()}-01-01`
+  const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+  const lastMonthStartStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}-01`
 
   // ── Průměr vajec/den na generaci ─────────────────────────────────────
   const avgEggsPerDay: Record<string, number> = {}
@@ -65,7 +67,10 @@ export default async function DashboardPage() {
         missingDays = Math.round((yesterday.getTime() - new Date(lastProdDate).getTime()) / 86400000)
       }
     }
-    return { name: g.name, week: sum(weekStartStr), month: sum(monthStartStr), year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, daysIntoWeek }
+    const lastMonthTotal = gp.filter(p => p.date >= lastMonthStartStr && p.date < monthStartStr).reduce((s, p) => s + p.egg_count, 0)
+    const thisMonthTotal = sum(monthStartStr)
+    const monthTrend = lastMonthTotal > 0 ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : null
+    return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, daysIntoWeek, monthTrend }
   })
 
   // ── Snáška po měsících ────────────────────────────────────────────────
@@ -96,16 +101,23 @@ export default async function DashboardPage() {
   }))
 
   // ── Prodej podle zákazníků ────────────────────────────────────────────
-  const byCustomer: Record<string, number> = {}
+  const custMap: Record<string, { total: number; count: number; months: Set<string> }> = {}
   for (const i of allIncomes) {
     const name = i.customer_name ?? '—'
     if (name === 'Historická data') continue
-    byCustomer[name] = (byCustomer[name] || 0) + i.amount
+    if (!custMap[name]) custMap[name] = { total: 0, count: 0, months: new Set() }
+    custMap[name].total += i.amount
+    custMap[name].count += 1
+    custMap[name].months.add(i.date.slice(0, 7))
   }
-  const salesByCustomer = Object.entries(byCustomer)
-    .map(([name, total]) => ({ name, total }))
+  const salesByCustomer = Object.entries(custMap)
+    .map(([name, d]) => ({ name, total: d.total }))
     .sort((a, b) => b.total - a.total)
     .slice(0, 8)
+  const customerStats = Object.entries(custMap)
+    .map(([name, d]) => ({ name, total: d.total, count: d.count, avgPurchase: Math.round(d.total / d.count), activeMonths: d.months.size }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10)
 
   // ── Prodej podle typu zákazníka ───────────────────────────────────────
   const byType: Record<string, number> = {}
@@ -133,6 +145,57 @@ export default async function DashboardPage() {
     totalProfit: acc.totalProfit + g.totalProfit,
   }), { income: 0, acquisitionCost: 0, operationalCost: 0, totalCost: 0, operationalProfit: 0, totalProfit: 0 })
 
+  // ── Per-vajce metriky + průměrné měsíční hodnoty ──────────────────────
+  const perGenFinance = generations.map(g => {
+    const gProds = allProductions.filter(p => p.generation_id === g.id)
+    const totalEggs = gProds.reduce((s, p) => s + p.egg_count, 0)
+    const fin = financialSummary.find(f => f.name === g.name)!
+    const start = new Date(g.started_at)
+    const endDate = g.ended_at ? new Date(g.ended_at) : new Date()
+    const months = Math.max(1, (endDate.getFullYear() - start.getFullYear()) * 12 + (endDate.getMonth() - start.getMonth()) + 1)
+    const avgPricePerEgg = totalEggs > 0 && fin.income > 0 ? fin.income / totalEggs : null
+    const costPerEgg = totalEggs > 0 && fin.totalCost > 0 ? fin.totalCost / totalEggs : null
+    const breakEven = avgPricePerEgg && avgPricePerEgg > 0 && fin.totalCost > 0 ? Math.ceil(fin.totalCost / avgPricePerEgg) : null
+    return { name: g.name, avgPricePerEgg, costPerEgg, breakEven, avgMonthlyIncome: fin.income / months, avgMonthlyCost: fin.totalCost / months }
+  })
+
+  // ── Kumulativní cashflow po měsících ──────────────────────────────────
+  const cfByMonth: Record<string, Record<string, number>> = {}
+  for (const i of allIncomes) {
+    const m = i.date.slice(0, 7)
+    const gName = (i.generation as any)?.name ?? '?'
+    if (!cfByMonth[m]) cfByMonth[m] = {}
+    cfByMonth[m][gName] = (cfByMonth[m][gName] || 0) + i.amount
+  }
+  for (const c of allCosts) {
+    const m = c.date.slice(0, 7)
+    const gName = (c.generation as any)?.name ?? '?'
+    if (!cfByMonth[m]) cfByMonth[m] = {}
+    cfByMonth[m][gName] = (cfByMonth[m][gName] || 0) - c.amount
+  }
+  const cfCum: Record<string, number> = {}
+  const cumulativeCashflow = Object.keys(cfByMonth).sort().map(m => {
+    const row: Record<string, string | number> = { month: formatMonth(m) }
+    for (const gName of genNames) {
+      cfCum[gName] = (cfCum[gName] || 0) + (cfByMonth[m]?.[gName] || 0)
+      row[gName] = cfCum[gName]
+    }
+    return row
+  })
+
+  // ── Srovnání generací ─────────────────────────────────────────────────
+  const generationComparison = generations.map(g => {
+    const gProds = allProductions.filter(p => p.generation_id === g.id)
+    const totalEggs = gProds.reduce((s, p) => s + p.egg_count, 0)
+    const fin = financialSummary.find(f => f.name === g.name)!
+    const start = new Date(g.started_at)
+    const endDate = g.ended_at ? new Date(g.ended_at) : new Date()
+    const durationDays = Math.round((endDate.getTime() - start.getTime()) / 86400000)
+    const eggsPerHen = g.hen_count && g.hen_count > 0 ? totalEggs / g.hen_count : null
+    const roi = fin.acquisitionCost > 0 ? (fin.totalProfit / fin.acquisitionCost) * 100 : null
+    return { id: g.id, name: g.name, isActive: !g.ended_at, totalEggs, eggsPerHen, avgEggsPerDay: avgEggsPerDay[g.id] ?? 0, durationDays, income: fin.income, totalCost: fin.totalCost, totalProfit: fin.totalProfit, roi }
+  })
+
   return (
     <DashboardClient
       generations={generations}
@@ -145,6 +208,10 @@ export default async function DashboardPage() {
       financialSummary={financialSummary}
       totals={totals}
       avgEggsPerDay={avgEggsPerDay}
+      perGenFinance={perGenFinance}
+      cumulativeCashflow={cumulativeCashflow}
+      customerStats={customerStats}
+      generationComparison={generationComparison}
     />
   )
 }

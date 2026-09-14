@@ -21,7 +21,13 @@ function fmt(d: string) {
   return new Date(d).toLocaleDateString('cs-CZ')
 }
 
-export default function GenerationsTab({ generations, avgEggsPerDay }: { generations: Generation[]; avgEggsPerDay: Record<string, number> }) {
+type GenComparison = { id: string; name: string; isActive: boolean; totalEggs: number; eggsPerHen: number | null; avgEggsPerDay: number; durationDays: number; income: number; totalCost: number; totalProfit: number; roi: number | null }
+
+function fmtCzk(n: number) {
+  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
+}
+
+export default function GenerationsTab({ generations, avgEggsPerDay, generationComparison }: { generations: Generation[]; avgEggsPerDay: Record<string, number>; generationComparison: GenComparison[] }) {
   const router = useRouter()
   const { toast } = useToast()
   const [gens, setGens] = useState<Generation[]>(generations)
@@ -173,6 +179,62 @@ export default function GenerationsTab({ generations, avgEggsPerDay }: { generat
       {gens.length === 0 && (
         <div className="card p-8 text-center">
           <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>Zatím žádné generace</p>
+        </div>
+      )}
+
+      {/* Srovnání generací */}
+      {generationComparison.length > 1 && (
+        <div className="card overflow-hidden">
+          <div className="card-header">
+            <h2 className="font-semibold text-sm" style={{ color: 'var(--text)' }}>Srovnání generací</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table-base">
+              <thead>
+                <tr>
+                  <th>Generace</th>
+                  <th className="text-right">Celkem vajec</th>
+                  <th className="text-right">Vejce / slepici</th>
+                  <th className="text-right">Ø vajec / den</th>
+                  <th className="text-right">Délka chovu</th>
+                  <th className="text-right">Příjmy</th>
+                  <th className="text-right">Náklady</th>
+                  <th className="text-right">Zisk / ztráta</th>
+                  <th className="text-right">ROI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {generationComparison.map(g => (
+                  <tr key={g.id}>
+                    <td>
+                      <span className="font-medium">{g.name}</span>
+                      {g.isActive && (
+                        <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'rgba(22,163,74,0.12)', color: '#16a34a' }}>aktivní</span>
+                      )}
+                    </td>
+                    <td className="text-right tabular-nums">{g.totalEggs.toLocaleString('cs-CZ')}</td>
+                    <td className="text-right tabular-nums">{g.eggsPerHen !== null ? g.eggsPerHen.toFixed(0) : '—'}</td>
+                    <td className="text-right tabular-nums">{g.avgEggsPerDay > 0 ? g.avgEggsPerDay.toFixed(1) : '—'}</td>
+                    <td className="text-right tabular-nums">
+                      {g.durationDays >= 14 ? `${Math.floor(g.durationDays / 7)} týd.` : `${g.durationDays} dní`}
+                    </td>
+                    <td className="text-right tabular-nums">{fmtCzk(g.income)}</td>
+                    <td className="text-right tabular-nums">{fmtCzk(g.totalCost)}</td>
+                    <td className="text-right tabular-nums font-semibold" style={{ color: g.totalProfit >= 0 ? '#16a34a' : '#ef4444' }}>
+                      {fmtCzk(g.totalProfit)}
+                    </td>
+                    <td className="text-right tabular-nums">
+                      {g.roi !== null ? (
+                        <span style={{ color: g.roi >= 0 ? '#16a34a' : '#ef4444' }}>
+                          {g.roi >= 0 ? '+' : ''}{g.roi.toFixed(0)} %
+                        </span>
+                      ) : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
