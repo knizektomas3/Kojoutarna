@@ -37,6 +37,9 @@ export default async function DashboardPage() {
   const yearStartStr = `${today.getFullYear()}-01-01`
   const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 1)
   const lastMonthStartStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}-01`
+  const lastMonthDayCount = new Date(today.getFullYear(), today.getMonth(), 0).getDate()
+  const lastMonthSameDay = Math.min(today.getDate(), lastMonthDayCount)
+  const lastMonthSameDayStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}-${String(lastMonthSameDay).padStart(2, '0')}`
 
   // ── Průměr vajec/den na generaci ─────────────────────────────────────
   const avgEggsPerDay: Record<string, number> = {}
@@ -67,7 +70,7 @@ export default async function DashboardPage() {
         missingDays = Math.round((yesterday.getTime() - new Date(lastProdDate).getTime()) / 86400000)
       }
     }
-    const lastMonthTotal = gp.filter(p => p.date >= lastMonthStartStr && p.date < monthStartStr).reduce((s, p) => s + p.egg_count, 0)
+    const lastMonthTotal = gp.filter(p => p.date >= lastMonthStartStr && p.date <= lastMonthSameDayStr).reduce((s, p) => s + p.egg_count, 0)
     const thisMonthTotal = sum(monthStartStr)
     const monthTrend = lastMonthTotal > 0 ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : null
     return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, daysIntoWeek, monthTrend }
