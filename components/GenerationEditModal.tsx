@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 export default function GenerationEditModal({
   generation,
@@ -26,7 +27,7 @@ export default function GenerationEditModal({
   const [initialHenCount, setInitialHenCount] = useState(generation.initial_hen_count ? String(generation.initial_hen_count) : '')
   const [notes, setNotes] = useState(generation.notes ?? '')
   const [ended, setEnded] = useState(!!generation.ended_at)
-  const [endedAt, setEndedAt] = useState(generation.ended_at ?? new Date().toISOString().split('T')[0])
+  const [endedAt, setEndedAt] = useState(generation.ended_at ?? localDateStr())
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 

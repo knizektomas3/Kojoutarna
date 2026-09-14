@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Generation, Production } from '@/types'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 export default function ProductionEditModal({
   production,
@@ -25,16 +26,19 @@ export default function ProductionEditModal({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
     setError('')
 
+    const eggs = Math.round(Number(eggCount))
+    if (isNaN(eggs) || eggs < 0) { setError('Zadejte platný počet vajec'); setSaving(false); return }
+
     const { error: err } = await supabase
       .from('productions')
-      .update({ generation_id: generationId, date, egg_count: parseInt(eggCount) })
+      .update({ generation_id: generationId, date, egg_count: eggs })
       .eq('id', production.id)
 
     setSaving(false)

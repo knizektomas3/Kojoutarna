@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createCost } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 const SUBCATEGORIES = {
   Pořizovací: ['Slepice', 'Kurník', 'Ohrádka', 'Příslušenství', 'Jiné'],
@@ -12,7 +13,7 @@ const SUBCATEGORIES = {
 
 export default function CostForm({ generations }: { generations: Generation[] }) {
   const { toast } = useToast()
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
 
   const [date, setDate] = useState(today)
   const [generationId, setGenerationId] = useState(generations[0]?.id ?? '')
@@ -31,6 +32,8 @@ export default function CostForm({ generations }: { generations: Generation[] })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!generationId) { setError('Vyberte generaci'); return }
+    const amt = Math.round(Number(amount))
+    if (isNaN(amt) || amt < 1) { setError('Zadejte platnou částku'); return }
     setSaving(true)
     setError('')
 
@@ -39,7 +42,7 @@ export default function CostForm({ generations }: { generations: Generation[] })
       date,
       cost_category: category,
       cost_subcategory: subcategory,
-      amount: parseInt(amount),
+      amount: amt,
       notes: notes || null,
     })
 

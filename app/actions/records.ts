@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { localDateStr } from '@/lib/date'
 
 export async function createProduction(data: {
   generation_id: string
@@ -119,7 +120,7 @@ export async function endGeneration(id: string): Promise<{ error?: string }> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Nejste přihlášen' }
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
   const { error } = await supabase.from('generations').update({ ended_at: today })
     .eq('id', id)
     .eq('user_id', user.id)

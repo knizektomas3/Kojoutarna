@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { localDateStr } from '@/lib/date'
 
 export default function GenerationModal({
   onClose,
@@ -13,7 +14,7 @@ export default function GenerationModal({
   const supabase = createClient()
   const [name, setName] = useState('')
   const [breed, setBreed] = useState('')
-  const [startedAt, setStartedAt] = useState(new Date().toISOString().split('T')[0])
+  const [startedAt, setStartedAt] = useState(localDateStr())
   const [henCount, setHenCount] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')

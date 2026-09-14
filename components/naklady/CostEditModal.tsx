@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Generation, Cost } from '@/types'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 const SUBCATEGORIES = {
   Pořizovací: ['Slepice', 'Kurník', 'Ohrádka', 'Příslušenství', 'Jiné'],
@@ -24,7 +25,7 @@ export default function CostEditModal({
   const supabase = createClient()
   const { toast } = useToast()
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
 
   const [date, setDate] = useState(cost.date)
   const [generationId, setGenerationId] = useState(cost.generation_id)
@@ -42,6 +43,8 @@ export default function CostEditModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const amt = Math.round(Number(amount))
+    if (isNaN(amt) || amt < 1) { setError('Zadejte platnou částku'); return }
     setSaving(true)
     setError('')
 
@@ -52,7 +55,7 @@ export default function CostEditModal({
         date,
         cost_category: category,
         cost_subcategory: subcategory,
-        amount: parseInt(amount),
+        amount: amt,
         notes: notes || null,
       })
       .eq('id', cost.id)

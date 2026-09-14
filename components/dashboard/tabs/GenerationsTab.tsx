@@ -7,6 +7,7 @@ import GenerationEditModal from '@/components/GenerationEditModal'
 import ConfirmModal from '@/components/ConfirmModal'
 import { useToast } from '@/components/Toast'
 import { endGeneration } from '@/app/actions/records'
+import { localDateStr } from '@/lib/date'
 
 function PencilIcon() {
   return (
@@ -40,7 +41,7 @@ export default function GenerationsTab({ generations, avgEggsPerDay, generationC
   }
 
   const handleEnd = async (id: string) => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = localDateStr()
     const result = await endGeneration(id)
     if (result.error) {
       toast('Chyba: ' + result.error)

@@ -6,11 +6,12 @@ import { createProduction } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import GenerationModal from '@/components/GenerationModal'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 export default function ProductionForm({ generations }: { generations: Generation[] }) {
   const router = useRouter()
   const { toast } = useToast()
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
 
   const [date, setDate] = useState(today)
   const [generationId, setGenerationId] = useState(generations[0]?.id ?? '')
@@ -22,13 +23,15 @@ export default function ProductionForm({ generations }: { generations: Generatio
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!generationId) { setError('Vyberte generaci'); return }
+    const eggs = Math.round(Number(eggCount))
+    if (isNaN(eggs) || eggs < 0) { setError('Zadejte platný počet vajec'); return }
     setSaving(true)
     setError('')
 
     const { error: err } = await createProduction({
       generation_id: generationId,
       date,
-      egg_count: parseInt(eggCount),
+      egg_count: eggs,
     })
 
     setSaving(false)

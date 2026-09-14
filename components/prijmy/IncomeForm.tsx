@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createIncome } from '@/app/actions/records'
 import type { Generation } from '@/types'
 import { useToast } from '@/components/Toast'
+import { localDateStr } from '@/lib/date'
 
 const CUSTOMER_TYPES = ['Rodina', 'Známí', 'Facebook', 'Jiné']
 
@@ -17,7 +18,7 @@ export default function IncomeForm({
   customers: Customer[]
 }) {
   const { toast } = useToast()
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateStr()
 
   const [date, setDate] = useState(today)
   const [generationId, setGenerationId] = useState(generations[0]?.id ?? '')
@@ -59,6 +60,8 @@ export default function IncomeForm({
     e.preventDefault()
     if (!generationId) { setError('Vyberte generaci'); return }
     if (!customerId) { setError('Vyberte zákazníka'); return }
+    const amt = Math.round(Number(amount))
+    if (isNaN(amt) || amt < 1) { setError('Zadejte platnou částku'); return }
     setSaving(true)
     setError('')
 
@@ -66,7 +69,7 @@ export default function IncomeForm({
     const result = await createIncome({
       generation_id: generationId,
       date,
-      amount: parseInt(amount),
+      amount: amt,
       customer_name: customer?.name ?? null,
       customer_type: customerType,
     })
