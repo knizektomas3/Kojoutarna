@@ -3,7 +3,6 @@
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
   ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell,
-  LineChart, Line, ReferenceLine,
 } from 'recharts'
 
 const GEN_COLORS = ['#d97706', '#3b82f6', '#10b981', '#8b5cf6']
@@ -30,7 +29,7 @@ function StatCard({ label, value, neutral }: { label: string; value: number; neu
 
 type FinSummary = { name: string; income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }
 type Totals = { income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }
-type PerGenFin = { name: string; avgPricePerEgg: number | null; costPerEgg: number | null; breakEven: number | null; avgMonthlyIncome: number; avgMonthlyCost: number }
+type PerGenFin = { name: string; costPerEgg: number | null; avgMonthlyIncome: number; avgMonthlyCost: number }
 type CustomerStat = { name: string; total: number; count: number; avgPurchase: number; activeMonths: number }
 
 type Props = {
@@ -41,11 +40,10 @@ type Props = {
   financialSummary: FinSummary[]
   totals: Totals
   perGenFinance: PerGenFin[]
-  cumulativeCashflow: Record<string, string | number>[]
   customerStats: CustomerStat[]
 }
 
-export default function FinanceTab({ genNames, monthlySales, salesByCustomer, salesByCustomerType, financialSummary, totals, perGenFinance, cumulativeCashflow, customerStats }: Props) {
+export default function FinanceTab({ genNames, monthlySales, salesByCustomer, salesByCustomerType, financialSummary, totals, perGenFinance, customerStats }: Props) {
   return (
     <div className="space-y-5">
       {/* Souhrnné karty */}
@@ -89,23 +87,11 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
 
             {/* Per-vajce metriky */}
             {pgf && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-3 mt-2">
                 <div className="card p-3 sm:p-4 min-w-0">
-                  <p className="text-xs mb-1 font-medium leading-tight" style={{ color: 'var(--text-muted)' }}>Cena / vejce</p>
-                  <p className="text-base sm:text-xl font-bold tabular-nums" style={{ color: 'var(--text)' }}>
-                    {pgf.avgPricePerEgg !== null ? `${pgf.avgPricePerEgg.toFixed(2)} Kč` : '—'}
-                  </p>
-                </div>
-                <div className="card p-3 sm:p-4 min-w-0">
-                  <p className="text-xs mb-1 font-medium leading-tight" style={{ color: 'var(--text-muted)' }}>Náklady / vejce</p>
+                  <p className="text-xs mb-1 font-medium leading-tight" style={{ color: 'var(--text-muted)' }}>Provozní náklady / vejce</p>
                   <p className="text-base sm:text-xl font-bold tabular-nums" style={{ color: 'var(--text)' }}>
                     {pgf.costPerEgg !== null ? `${pgf.costPerEgg.toFixed(2)} Kč` : '—'}
-                  </p>
-                </div>
-                <div className="card p-3 sm:p-4 min-w-0">
-                  <p className="text-xs mb-1 font-medium leading-tight" style={{ color: 'var(--text-muted)' }}>Break-even (vejce)</p>
-                  <p className="text-base sm:text-xl font-bold tabular-nums" style={{ color: 'var(--text)' }}>
-                    {pgf.breakEven !== null ? pgf.breakEven.toLocaleString('cs-CZ') : '—'}
                   </p>
                 </div>
                 <div className="card p-3 sm:p-4 min-w-0">
@@ -138,31 +124,6 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                   <Bar key={g} dataKey={g} stackId="a" fill={GEN_COLORS[i]} radius={i === genNames.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]} activeBar={false} />
                 ))}
               </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </div>
-
-      {/* Kumulativní cashflow */}
-      <div className="card p-4 sm:p-5">
-        <h2 className="font-semibold text-sm mb-1" style={{ color: 'var(--text)' }}>Kumulativní cashflow</h2>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-subtle)' }}>Průběžný zisk / ztráta v čase (příjmy − náklady)</p>
-        {cumulativeCashflow.length === 0 ? (
-          <p className="text-sm text-center py-8" style={{ color: 'var(--text-subtle)' }}>Žádná data</p>
-        ) : (
-          <div onMouseDown={e => e.preventDefault()}>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={cumulativeCashflow} margin={{ top: 4, right: 4, left: 4, bottom: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 9, angle: -45, textAnchor: 'end', dy: 4 }} height={55} interval={0} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} axisLine={false} tickLine={false} width={36} />
-                <Tooltip formatter={(v) => fmt(Number(v))} cursor={{ stroke: 'var(--border-strong)', strokeWidth: 1 }} />
-                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8, fontSize: 12 }} />
-                <ReferenceLine y={0} stroke="var(--border-strong)" strokeDasharray="4 4" />
-                {genNames.map((g, i) => (
-                  <Line key={g} type="monotone" dataKey={g} stroke={GEN_COLORS[i]} strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                ))}
-              </LineChart>
             </ResponsiveContainer>
           </div>
         )}

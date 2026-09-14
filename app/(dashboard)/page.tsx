@@ -156,10 +156,8 @@ export default async function DashboardPage() {
     const start = new Date(g.started_at)
     const endDate = g.ended_at ? new Date(g.ended_at) : new Date()
     const months = Math.max(1, (endDate.getFullYear() - start.getFullYear()) * 12 + (endDate.getMonth() - start.getMonth()) + 1)
-    const avgPricePerEgg = totalEggs > 0 && fin.income > 0 ? fin.income / totalEggs : null
-    const costPerEgg = totalEggs > 0 && fin.totalCost > 0 ? fin.totalCost / totalEggs : null
-    const breakEven = avgPricePerEgg && avgPricePerEgg > 0 && fin.totalCost > 0 ? Math.ceil(fin.totalCost / avgPricePerEgg) : null
-    return { name: g.name, avgPricePerEgg, costPerEgg, breakEven, avgMonthlyIncome: fin.income / months, avgMonthlyCost: fin.totalCost / months }
+    const costPerEgg = totalEggs > 0 && fin.operationalCost > 0 ? fin.operationalCost / totalEggs : null
+    return { name: g.name, costPerEgg, avgMonthlyIncome: fin.income / months, avgMonthlyCost: fin.totalCost / months }
   })
 
   // ── Kumulativní cashflow po měsících ──────────────────────────────────
@@ -212,7 +210,6 @@ export default async function DashboardPage() {
       totals={totals}
       avgEggsPerDay={avgEggsPerDay}
       perGenFinance={perGenFinance}
-      cumulativeCashflow={cumulativeCashflow}
       customerStats={customerStats}
       generationComparison={generationComparison}
     />

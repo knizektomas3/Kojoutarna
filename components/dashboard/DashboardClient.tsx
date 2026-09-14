@@ -17,8 +17,7 @@ type Props = {
   financialSummary: { name: string; income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }[]
   totals: { income: number; acquisitionCost: number; operationalCost: number; totalCost: number; operationalProfit: number; totalProfit: number }
   avgEggsPerDay: Record<string, number>
-  perGenFinance: { name: string; avgPricePerEgg: number | null; costPerEgg: number | null; breakEven: number | null; avgMonthlyIncome: number; avgMonthlyCost: number }[]
-  cumulativeCashflow: Record<string, string | number>[]
+  perGenFinance: { name: string; costPerEgg: number | null; avgMonthlyIncome: number; avgMonthlyCost: number }[]
   customerStats: { name: string; total: number; count: number; avgPurchase: number; activeMonths: number }[]
   generationComparison: { id: string; name: string; isActive: boolean; totalEggs: number; eggsPerHen: number | null; avgEggsPerDay: number; durationDays: number; income: number; totalCost: number; totalProfit: number; roi: number | null }[]
 }
@@ -69,7 +68,6 @@ export default function DashboardClient(props: Props) {
           financialSummary={props.financialSummary}
           totals={props.totals}
           perGenFinance={props.perGenFinance}
-          cumulativeCashflow={props.cumulativeCashflow}
           customerStats={props.customerStats}
         />
       </div>
