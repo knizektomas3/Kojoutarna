@@ -8,22 +8,35 @@ function formatMonth(ym: string) {
   return new Date(y, m - 1, 1).toLocaleDateString('cs-CZ', { month: 'short', year: '2-digit' })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchAllRows(builder: any): Promise<any[]> {
+  const PAGE = 1000
+  const result: any[] = []
+  let from = 0
+  while (true) {
+    const { data, error } = await builder.range(from, from + PAGE - 1)
+    if (error || !data || data.length === 0) break
+    result.push(...data)
+    if (data.length < PAGE) break
+    from += PAGE
+  }
+  return result
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [generationsRes, allProductionsRes, allIncomesRes, allCostsRes] = await Promise.all([
-    supabase.from('generations').select('*').eq('user_id', user.id).order('started_at'),
-    supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
-    supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
-    supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
+  const generationsRes = await supabase.from('generations').select('*').eq('user_id', user.id).order('started_at')
+
+  const [allProductions, allIncomes, allCosts] = await Promise.all([
+    fetchAllRows(supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user.id).order('date')),
+    fetchAllRows(supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user.id).order('date')),
+    fetchAllRows(supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user.id).order('date')),
   ])
 
   const generations = generationsRes.data ?? []
-  const allProductions = allProductionsRes.data ?? []
-  const allIncomes = allIncomesRes.data ?? []
-  const allCosts = allCostsRes.data ?? []
   const genNames = generations.map(g => g.name)
 
   // ── Datumové hranice (Europe/Prague timezone) ─────────────────────────
@@ -199,27 +212,21 @@ export default async function DashboardPage() {
     return { id: g.id, name: g.name, isActive: !g.ended_at, totalEggs, eggsPerHen, avgEggsPerDay: avgEggsPerDay[g.id] ?? 0, durationDays, income: fin.income, totalCost: fin.totalCost, totalProfit: fin.totalProfit, roi }
   })
 
-  // DEBUG
   return (
-    <>
-      <div style={{ marginBottom: 16, padding: '10px 14px', background: '#fef9c3', border: '1px solid #ca8a04', borderRadius: 8, fontSize: 12, fontFamily: 'monospace', color: '#92400e' }}>
-        <strong>DEBUG:</strong> celkem záznamů snášky: {allProductions.length} | poslední 3: {allProductions.slice(-3).map(p => `${p.date}/${(p.generation as any)?.name}`).join(', ')}
-      </div>
-      <DashboardClient
-        generations={generations}
-        genNames={genNames}
-        productionStats={productionStats}
-        monthlyProduction={monthlyProduction}
-        monthlySales={monthlySales}
-        salesByCustomer={salesByCustomer}
-        salesByCustomerType={salesByCustomerType}
-        financialSummary={financialSummary}
-        totals={totals}
-        avgEggsPerDay={avgEggsPerDay}
-        perGenFinance={perGenFinance}
-        customerStats={customerStats}
-        generationComparison={generationComparison}
-      />
-    </>
+    <DashboardClient
+      generations={generations}
+      genNames={genNames}
+      productionStats={productionStats}
+      monthlyProduction={monthlyProduction}
+      monthlySales={monthlySales}
+      salesByCustomer={salesByCustomer}
+      salesByCustomerType={salesByCustomerType}
+      financialSummary={financialSummary}
+      totals={totals}
+      avgEggsPerDay={avgEggsPerDay}
+      perGenFinance={perGenFinance}
+      customerStats={customerStats}
+      generationComparison={generationComparison}
+    />
   )
 }
