@@ -14,7 +14,8 @@ export default function ProductionForm({ generations }: { generations: Generatio
   const today = localDateStr()
 
   const [date, setDate] = useState(today)
-  const [generationId, setGenerationId] = useState(generations[0]?.id ?? '')
+  const activeGenerations = generations.filter(g => !g.ended_at)
+  const [generationId, setGenerationId] = useState(activeGenerations[0]?.id ?? generations[0]?.id ?? '')
   const [eggCount, setEggCount] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -72,7 +73,12 @@ export default function ProductionForm({ generations }: { generations: Generatio
           <label className="field-label">Generace</label>
           <select value={generationId} onChange={(e) => setGenerationId(e.target.value)} required className="field-input">
             <option value="">— vyberte —</option>
-            {generations.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+            {activeGenerations.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+            {generations.filter(g => g.ended_at).length > 0 && (
+              <optgroup label="Ukončené">
+                {generations.filter(g => g.ended_at).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+              </optgroup>
+            )}
           </select>
         </div>
         <div>
