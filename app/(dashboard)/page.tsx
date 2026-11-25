@@ -199,21 +199,27 @@ export default async function DashboardPage() {
     return { id: g.id, name: g.name, isActive: !g.ended_at, totalEggs, eggsPerHen, avgEggsPerDay: avgEggsPerDay[g.id] ?? 0, durationDays, income: fin.income, totalCost: fin.totalCost, totalProfit: fin.totalProfit, roi }
   })
 
+  // DEBUG
   return (
-    <DashboardClient
-      generations={generations}
-      genNames={genNames}
-      productionStats={productionStats}
-      monthlyProduction={monthlyProduction}
-      monthlySales={monthlySales}
-      salesByCustomer={salesByCustomer}
-      salesByCustomerType={salesByCustomerType}
-      financialSummary={financialSummary}
-      totals={totals}
-      avgEggsPerDay={avgEggsPerDay}
-      perGenFinance={perGenFinance}
-      customerStats={customerStats}
-      generationComparison={generationComparison}
-    />
+    <>
+      <div style={{ marginBottom: 16, padding: '10px 14px', background: '#fef9c3', border: '1px solid #ca8a04', borderRadius: 8, fontSize: 12, fontFamily: 'monospace', color: '#92400e' }}>
+        <strong>DEBUG:</strong> celkem záznamů snášky: {allProductions.length} | poslední 3: {allProductions.slice(-3).map(p => `${p.date}/${(p.generation as any)?.name}`).join(', ')}
+      </div>
+      <DashboardClient
+        generations={generations}
+        genNames={genNames}
+        productionStats={productionStats}
+        monthlyProduction={monthlyProduction}
+        monthlySales={monthlySales}
+        salesByCustomer={salesByCustomer}
+        salesByCustomerType={salesByCustomerType}
+        financialSummary={financialSummary}
+        totals={totals}
+        avgEggsPerDay={avgEggsPerDay}
+        perGenFinance={perGenFinance}
+        customerStats={customerStats}
+        generationComparison={generationComparison}
+      />
+    </>
   )
 }
