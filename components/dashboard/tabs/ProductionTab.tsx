@@ -7,7 +7,7 @@ import {
 
 const GEN_COLORS = ['#c97318', '#3272c0', '#1f9268', '#7c5bbf']
 
-type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; lastProdDate: string | null; daysIntoWeek: number; monthTrend: number | null }
+type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; lastProdDate: string | null; daysIntoWeek: number; monthTrend: number | null; predict7: number; predict30: number }
 
 type Props = {
   genNames: string[]
@@ -141,6 +141,36 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
           </table>
         </div>
       </div>
+
+      {/* Predikce snášky */}
+      {productionStats.some(g => g.predict7 > 0) && (
+        <div className="card p-5">
+          <div className="mb-4">
+            <h2 className="font-bold text-sm tracking-tight" style={{ color: 'var(--text)' }}>Predikce snášky</h2>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-subtle)' }}>vychází z průměru posledních 30 dní</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {productionStats.filter(g => g.predict7 > 0).map((g, i) => (
+              <div key={g.name} className="card p-3 sm:p-4 min-w-0" style={{ border: '1px solid var(--border)' }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: GEN_COLORS[i % GEN_COLORS.length] }} />
+                  <span className="text-xs font-bold truncate" style={{ color: 'var(--text-muted)' }}>{g.name}</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>příštích 7 dní</span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--text)' }}>≈ {g.predict7} ks</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>příštích 30 dní</span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--text)' }}>≈ {g.predict30} ks</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Graf snášky po měsících */}
       <div className="card p-5 sm:p-6">

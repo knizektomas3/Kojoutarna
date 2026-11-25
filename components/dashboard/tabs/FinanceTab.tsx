@@ -3,6 +3,7 @@
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
   ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell,
+  LineChart, Line, ReferenceLine,
 } from 'recharts'
 
 const GEN_COLORS = ['#c97318', '#3272c0', '#1f9268', '#7c5bbf']
@@ -69,9 +70,10 @@ type Props = {
   totals: Totals
   perGenFinance: PerGenFin[]
   customerStats: CustomerStat[]
+  cumulativeCashflow: Record<string, string | number>[]
 }
 
-export default function FinanceTab({ genNames, monthlySales, salesByCustomer, salesByCustomerType, financialSummary, totals, perGenFinance, customerStats }: Props) {
+export default function FinanceTab({ genNames, monthlySales, salesByCustomer, salesByCustomerType, financialSummary, totals, perGenFinance, customerStats, cumulativeCashflow }: Props) {
   return (
     <div className="space-y-6">
       {/* Souhrnné karty */}
@@ -293,6 +295,55 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Kumulativní cashflow */}
+      {cumulativeCashflow.length > 0 && (
+        <div className="card p-5 sm:p-6">
+          <div className="mb-5">
+            <h2 className="font-bold text-sm tracking-tight" style={{ color: 'var(--text)' }}>Kumulativní cashflow</h2>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-subtle)' }}>Příjmy mínus náklady v čase — kladné hodnoty = kumulativní zisk</p>
+          </div>
+          <div onMouseDown={e => e.preventDefault()}>
+            <ResponsiveContainer width="100%" height={280}>
+              <LineChart data={cumulativeCashflow} margin={{ top: 4, right: 8, left: 0, bottom: 14 }}>
+                <CartesianGrid strokeDasharray="0" stroke="var(--chart-grid)" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 10, angle: -40, textAnchor: 'end', dy: 4 }}
+                  height={52}
+                  interval={0}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={v => `${(v / 1000).toFixed(0)}k Kč`}
+                  axisLine={false}
+                  tickLine={false}
+                  width={56}
+                />
+                <Tooltip
+                  content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={String(label ?? '')} format={fmt} />}
+                  cursor={{ stroke: 'var(--border-strong)', strokeWidth: 1 }}
+                />
+                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 12, fontSize: 12 }} />
+                <ReferenceLine y={0} strokeDasharray="4 4" stroke="var(--border-strong)" />
+                {genNames.map((g, i) => (
+                  <Line
+                    key={g}
+                    type="monotone"
+                    dataKey={g}
+                    stroke={GEN_COLORS[i % GEN_COLORS.length]}
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}

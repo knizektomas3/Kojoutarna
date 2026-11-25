@@ -9,7 +9,7 @@ import type { Generation } from '@/types'
 type Props = {
   generations: Generation[]
   genNames: string[]
-  productionStats: { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; lastProdDate: string | null; daysIntoWeek: number; monthTrend: number | null }[]
+  productionStats: { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; lastProdDate: string | null; daysIntoWeek: number; monthTrend: number | null; predict7: number; predict30: number }[]
   monthlyProduction: Record<string, string | number>[]
   monthlySales: Record<string, string | number>[]
   salesByCustomer: { name: string; total: number }[]
@@ -20,6 +20,7 @@ type Props = {
   perGenFinance: { name: string; costPerEgg: number | null; avgMonthlyIncome: number; avgMonthlyCost: number }[]
   customerStats: { name: string; total: number; count: number; avgPurchase: number; activeMonths: number }[]
   generationComparison: { id: string; name: string; isActive: boolean; totalEggs: number; eggsPerHen: number | null; avgEggsPerDay: number; durationDays: number; income: number; totalCost: number; totalProfit: number; roi: number | null }[]
+  cumulativeCashflow: Record<string, string | number>[]
 }
 
 const TABS = [
@@ -69,6 +70,7 @@ export default function DashboardClient(props: Props) {
           totals={props.totals}
           perGenFinance={props.perGenFinance}
           customerStats={props.customerStats}
+          cumulativeCashflow={props.cumulativeCashflow}
         />
       </div>
       <div style={{ display: tab === 'generace' ? 'block' : 'none' }}>

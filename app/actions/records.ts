@@ -130,3 +130,18 @@ export async function endGeneration(id: string): Promise<{ error?: string }> {
   refresh()
   return { }
 }
+
+export async function createProductionsBulk(
+  entries: { generation_id: string; date: string; egg_count: number }[]
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Nejste přihlášen' }
+  const rows = entries.map(e => ({ user_id: user.id, ...e }))
+  const { error } = await supabase.from('productions').upsert(rows, {
+    onConflict: 'user_id,generation_id,date',
+  })
+  if (error) return { error: error.message }
+  refresh()
+  return {}
+}

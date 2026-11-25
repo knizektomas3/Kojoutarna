@@ -53,6 +53,7 @@ export default async function DashboardPage() {
   const weekStartStr = fmtDate(utcNoon(tyear, tmonth - 1, tday - (dow === 0 ? 6 : dow - 1)))
   const monthStartStr = `${tyear}-${String(tmonth).padStart(2, '0')}-01`
   const yearStartStr  = `${tyear}-01-01`
+  const thirtyDaysAgoStr = fmtDate(utcNoon(tyear, tmonth - 1, tday - 30))
   const daysIntoWeek  = dow === 0 ? 7 : dow
 
   const yesterdayStr      = fmtDate(utcNoon(tyear, tmonth - 1, tday - 1))
@@ -87,7 +88,11 @@ export default async function DashboardPage() {
     const lastMonthTotal = gp.filter(p => p.date >= lastMonthStartStr && p.date <= lastMonthSameDayStr).reduce((s, p) => s + p.egg_count, 0)
     const thisMonthTotal = sum(monthStartStr)
     const monthTrend = lastMonthTotal > 0 ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : null
-    return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, lastProdDate, daysIntoWeek, monthTrend }
+    const last30 = gp.filter(p => p.date >= thirtyDaysAgoStr && p.date <= todayStr).reduce((s, p) => s + p.egg_count, 0)
+    const last30avg = last30 / 30
+    const predict7 = Math.round(last30avg * 7)
+    const predict30 = Math.round(last30avg * 30)
+    return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, lastProdDate, daysIntoWeek, monthTrend, predict7, predict30 }
   })
 
   // ── Snáška po měsících ────────────────────────────────────────────────
@@ -227,6 +232,7 @@ export default async function DashboardPage() {
       perGenFinance={perGenFinance}
       customerStats={customerStats}
       generationComparison={generationComparison}
+      cumulativeCashflow={cumulativeCashflow}
     />
   )
 }
