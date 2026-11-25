@@ -1,4 +1,4 @@
-const CACHE = 'kojoutarna-v2'
+const CACHE = 'kojoutarna-v3'
 
 self.addEventListener('install', () => {
   self.skipWaiting()
@@ -20,6 +20,16 @@ self.addEventListener('fetch', (e) => {
   }
   // Supabase API requesty nikdy necachovat
   if (e.request.url.includes('supabase.co')) {
+    e.respondWith(fetch(e.request))
+    return
+  }
+  // Next.js RSC navigační requesty nikdy necachovat (obsahují živá data)
+  if (e.request.url.includes('_rsc=') || e.request.headers.get('rsc') === '1') {
+    e.respondWith(fetch(e.request))
+    return
+  }
+  // Next.js server action requesty nikdy necachovat
+  if (e.request.headers.get('next-action')) {
     e.respondWith(fetch(e.request))
     return
   }
