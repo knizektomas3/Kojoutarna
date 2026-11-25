@@ -15,9 +15,9 @@ export default async function DashboardPage() {
 
   const [generationsRes, allProductionsRes, allIncomesRes, allCostsRes] = await Promise.all([
     supabase.from('generations').select('*').eq('user_id', user.id).order('started_at'),
-    supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
-    supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
-    supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user.id).order('date'),
+    supabase.from('productions').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
+    supabase.from('incomes').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
+    supabase.from('costs').select('*, generation:generations(name)').eq('user_id', user.id).order('date').limit(10000),
   ])
 
   const generations = generationsRes.data ?? []
@@ -199,50 +199,21 @@ export default async function DashboardPage() {
     return { id: g.id, name: g.name, isActive: !g.ended_at, totalEggs, eggsPerHen, avgEggsPerDay: avgEggsPerDay[g.id] ?? 0, durationDays, income: fin.income, totalCost: fin.totalCost, totalProfit: fin.totalProfit, roi }
   })
 
-  // DEBUG – dočasné, smazat po diagnostice
-  const debugRecent = allProductions.slice(-10).map(p => ({
-    date: p.date,
-    generation_id: p.generation_id,
-    gen_name: (p.generation as any)?.name ?? '?',
-    egg_count: p.egg_count,
-  }))
-
   return (
-    <>
-      <details style={{ marginBottom: 16, padding: '10px 14px', background: '#fef9c3', border: '1px solid #ca8a04', borderRadius: 8, fontSize: 12, fontFamily: 'monospace' }}>
-        <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#92400e' }}>🔍 DEBUG – posledních 10 záznamů (smazat po diagnostice)</summary>
-        <p style={{ marginTop: 8 }}>todayStr: {todayStr} | yesterdayStr: {yesterdayStr} | weekStartStr: {weekStartStr}</p>
-        <p>Generace: {generations.map(g => `${g.name} (${g.id.slice(0,8)})`).join(', ')}</p>
-        <p>Celkem záznamů snášky: {allProductions.length}</p>
-        <table style={{ borderCollapse: 'collapse', marginTop: 6, width: '100%' }}>
-          <thead><tr>{['datum','generation_id','jméno gen.','vajec'].map(h => <th key={h} style={{ textAlign:'left', borderBottom:'1px solid #ca8a04', paddingRight:12 }}>{h}</th>)}</tr></thead>
-          <tbody>
-            {debugRecent.map((r, i) => (
-              <tr key={i}>
-                <td style={{ paddingRight:12 }}>{r.date}</td>
-                <td style={{ paddingRight:12 }}>{r.generation_id.slice(0,8)}…</td>
-                <td style={{ paddingRight:12 }}>{r.gen_name}</td>
-                <td>{r.egg_count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </details>
-      <DashboardClient
-        generations={generations}
-        genNames={genNames}
-        productionStats={productionStats}
-        monthlyProduction={monthlyProduction}
-        monthlySales={monthlySales}
-        salesByCustomer={salesByCustomer}
-        salesByCustomerType={salesByCustomerType}
-        financialSummary={financialSummary}
-        totals={totals}
-        avgEggsPerDay={avgEggsPerDay}
-        perGenFinance={perGenFinance}
-        customerStats={customerStats}
-        generationComparison={generationComparison}
-      />
-    </>
+    <DashboardClient
+      generations={generations}
+      genNames={genNames}
+      productionStats={productionStats}
+      monthlyProduction={monthlyProduction}
+      monthlySales={monthlySales}
+      salesByCustomer={salesByCustomer}
+      salesByCustomerType={salesByCustomerType}
+      financialSummary={financialSummary}
+      totals={totals}
+      avgEggsPerDay={avgEggsPerDay}
+      perGenFinance={perGenFinance}
+      customerStats={customerStats}
+      generationComparison={generationComparison}
+    />
   )
 }
