@@ -7,7 +7,7 @@ import {
 
 const GEN_COLORS = ['#d97706', '#3b82f6', '#10b981', '#8b5cf6']
 
-type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; daysIntoWeek: number; monthTrend: number | null }
+type ProductionStat = { name: string; week: number; month: number; year: number; total: number; henCount: number | null; missingDays: number; lastProdDate: string | null; daysIntoWeek: number; monthTrend: number | null }
 
 type Props = {
   genNames: string[]
@@ -38,6 +38,7 @@ export default function ProductionTab({ genNames, productionStats, monthlyProduc
           {warnings.map(g => (
             <p key={g.name} className="text-xs" style={{ color: '#92400e' }}>
               {g.name} generace – nezadáno {g.missingDays === 1 ? '1 den' : `${g.missingDays} dny/dní`}
+              {g.lastProdDate && <span style={{ opacity: 0.7 }}> (poslední záznam: {g.lastProdDate})</span>}
             </p>
           ))}
         </div>

@@ -74,7 +74,7 @@ export default async function DashboardPage() {
     const lastMonthTotal = gp.filter(p => p.date >= lastMonthStartStr && p.date <= lastMonthSameDayStr).reduce((s, p) => s + p.egg_count, 0)
     const thisMonthTotal = sum(monthStartStr)
     const monthTrend = lastMonthTotal > 0 ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : null
-    return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, daysIntoWeek, monthTrend }
+    return { name: g.name, week: sum(weekStartStr), month: thisMonthTotal, year: sum(yearStartStr), total: gp.reduce((s, p) => s + p.egg_count, 0), henCount: g.hen_count, missingDays, lastProdDate, daysIntoWeek, monthTrend }
   })
 
   // ── Snáška po měsících ────────────────────────────────────────────────

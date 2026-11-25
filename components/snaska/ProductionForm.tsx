@@ -28,16 +28,20 @@ export default function ProductionForm({ generations }: { generations: Generatio
     setSaving(true)
     setError('')
 
-    const { error: err } = await createProduction({
-      generation_id: generationId,
-      date,
-      egg_count: eggs,
-    })
-
-    setSaving(false)
-    if (err) { setError(err); return }
-    setEggCount('')
-    toast('Záznam byl uložen')
+    try {
+      const { error: err } = await createProduction({
+        generation_id: generationId,
+        date,
+        egg_count: eggs,
+      })
+      setSaving(false)
+      if (err) { setError(err); return }
+      setEggCount('')
+      toast('Záznam byl uložen')
+    } catch (e) {
+      setSaving(false)
+      setError('Chyba serveru: ' + String(e))
+    }
   }
 
   return (
