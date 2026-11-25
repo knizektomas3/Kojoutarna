@@ -40,11 +40,11 @@ export default function DashboardClient(props: Props) {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap flex-shrink-0"
+            className="px-4 py-3 text-sm font-bold border-b-2 transition-all -mb-px whitespace-nowrap flex-shrink-0 tracking-tight"
             style={
               tab === t.key
                 ? { borderColor: 'var(--accent)', color: 'var(--accent)' }
-                : { borderColor: 'transparent', color: 'var(--text-muted)' }
+                : { borderColor: 'transparent', color: 'var(--text-subtle)' }
             }
           >
             {t.label}

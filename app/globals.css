@@ -3,56 +3,58 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-family-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-family-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
 
 /* ── Color tokens ─────────────────────────────────────── */
 :root {
-  --bg:            #f3f4f6;
-  --surface:       #ffffff;
-  --surface-alt:   #f9fafb;
-  --border:        #e5e7eb;
-  --border-strong: #d1d5db;
-  --text:          #111827;
-  --text-muted:    #6b7280;
-  --text-subtle:   #9ca3af;
-  --accent:        #b45309;
-  --accent-hover:  #92400e;
+  --bg:            #f4f1eb;
+  --surface:       #fdfcf8;
+  --surface-alt:   #f8f5ee;
+  --border:        #e3ddd3;
+  --border-strong: #cdc6ba;
+  --text:          #1a110a;
+  --text-muted:    #6b5f52;
+  --text-subtle:   #9e9185;
+  --accent:        #c27016;
+  --accent-hover:  #a85e11;
   --accent-text:   #ffffff;
   --input-bg:      #ffffff;
-  --ring:          rgba(180, 83, 9, 0.25);
-  --shadow-sm:     0 1px 2px rgba(0,0,0,0.05);
-  --shadow:        0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
-  --nav-bg:        #1c1009;
+  --ring:          rgba(194, 112, 22, 0.22);
+  --shadow-sm:     0 1px 3px rgba(26, 16, 8, 0.07);
+  --shadow:        0 2px 8px rgba(26, 16, 8, 0.09), 0 1px 3px rgba(26, 16, 8, 0.05);
+  --shadow-md:     0 4px 16px rgba(26, 16, 8, 0.1), 0 2px 6px rgba(26, 16, 8, 0.06);
+  --nav-bg:        #1a0f07;
   --nav-text:      #fde68a;
-  --nav-active:    #92400e;
+  --nav-active:    rgba(194,112,22,0.35);
   --nav-hover:     rgba(255,255,255,0.07);
-  --chart-grid:    #f0f0f0;
-  --chart-tick:    #9ca3af;
+  --chart-grid:    #ede8e0;
+  --chart-tick:    #9e9185;
 }
 
 .dark {
-  --bg:            #0d0f14;
-  --surface:       #161a22;
-  --surface-alt:   #1d2129;
-  --border:        #272c38;
-  --border-strong: #353b4a;
-  --text:          #f1f5f9;
-  --text-muted:    #94a3b8;
-  --text-subtle:   #64748b;
-  --accent:        #f59e0b;
-  --accent-hover:  #fbbf24;
-  --accent-text:   #1c0a00;
-  --input-bg:      #1d2129;
-  --ring:          rgba(245, 158, 11, 0.3);
-  --shadow-sm:     0 1px 2px rgba(0,0,0,0.3);
-  --shadow:        0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
-  --nav-bg:        #0d0f14;
+  --bg:            #0e0b08;
+  --surface:       #17120e;
+  --surface-alt:   #1e1812;
+  --border:        #2b2419;
+  --border-strong: #3a3025;
+  --text:          #f0ece4;
+  --text-muted:    #a09285;
+  --text-subtle:   #6b5f52;
+  --accent:        #f5a623;
+  --accent-hover:  #f8bb45;
+  --accent-text:   #1a0f07;
+  --input-bg:      #1e1812;
+  --ring:          rgba(245, 166, 35, 0.28);
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.3);
+  --shadow:        0 2px 8px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.3);
+  --nav-bg:        #0e0b08;
   --nav-text:      #fde68a;
-  --nav-active:    #78350f;
-  --nav-hover:     rgba(255,255,255,0.05);
-  --chart-grid:    #272c38;
-  --chart-tick:    #64748b;
+  --nav-active:    rgba(245,166,35,0.2);
+  --nav-hover:     rgba(255,255,255,0.06);
+  --chart-grid:    #2b2419;
+  --chart-tick:    #6b5f52;
 }
 
 /* ── Base ─────────────────────────────────────────────── */
@@ -64,8 +66,9 @@ body {
   height: 100%;
   background-color: var(--bg);
   color: var(--text);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -74,33 +77,36 @@ body {
   .card {
     background-color: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow);
   }
 
   .card-header {
-    padding: 0.875rem 1.25rem;
+    padding: 0.9375rem 1.375rem;
     border-bottom: 1px solid var(--border);
     background-color: var(--surface-alt);
-    border-radius: 0.75rem 0.75rem 0 0;
+    border-radius: 1rem 1rem 0 0;
   }
 
   .field-label {
     display: block;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: 0.4rem;
   }
 
   .field-input {
     width: 100%;
     background-color: var(--input-bg);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     color: var(--text);
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
+    border-radius: 0.625rem;
+    padding: 0.5625rem 0.875rem;
+    font-size: 0.9375rem;
+    font-family: inherit;
     line-height: 1.5;
     transition: border-color 0.15s, box-shadow 0.15s;
     outline: none;
@@ -112,6 +118,10 @@ body {
     box-shadow: 0 0 0 3px var(--ring);
   }
 
+  .field-input:hover:not(:focus) {
+    border-color: var(--border-strong);
+  }
+
   .field-input::placeholder {
     color: var(--text-subtle);
   }
@@ -120,21 +130,30 @@ body {
     width: 100%;
     background-color: var(--accent);
     color: var(--accent-text);
-    border-radius: 0.5rem;
-    padding: 0.5625rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
+    border-radius: 0.625rem;
+    padding: 0.6875rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-family: inherit;
     letter-spacing: 0.01em;
-    transition: background-color 0.15s, opacity 0.15s;
+    transition: background-color 0.15s, box-shadow 0.15s, opacity 0.15s;
     cursor: pointer;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 3px rgba(26, 16, 8, 0.15), 0 1px 2px rgba(26, 16, 8, 0.1);
   }
 
   .btn-primary:hover:not(:disabled) {
     background-color: var(--accent-hover);
+    box-shadow: 0 4px 12px rgba(194, 112, 22, 0.35);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(26, 16, 8, 0.15);
   }
 
   .btn-primary:disabled {
@@ -145,18 +164,20 @@ body {
   .btn-secondary {
     background-color: transparent;
     color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.5625rem 1rem;
     font-size: 0.875rem;
-    font-weight: 500;
-    transition: background-color 0.15s, color 0.15s;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
     cursor: pointer;
   }
 
   .btn-secondary:hover {
     background-color: var(--surface-alt);
     color: var(--text);
+    border-color: var(--border-strong);
   }
 
   .table-base {
@@ -166,15 +187,16 @@ body {
   }
 
   .table-base thead th {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    padding: 0.75rem 1.375rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     color: var(--text-subtle);
     border-bottom: 1px solid var(--border);
     text-align: left;
     background-color: var(--surface-alt);
+    white-space: nowrap;
   }
 
   .table-base thead th:last-child,
@@ -196,7 +218,7 @@ body {
   }
 
   .table-base td {
-    padding: 0.75rem 1.25rem;
+    padding: 0.8125rem 1.375rem;
     color: var(--text);
   }
 }
@@ -217,26 +239,19 @@ body {
   outline: none;
 }
 
-/* ── Recharts dark mode ──────────────────────────────── */
+/* ── Recharts theming ────────────────────────────────── */
 .recharts-cartesian-grid line {
   stroke: var(--chart-grid);
 }
 .recharts-cartesian-axis-tick text {
   fill: var(--chart-tick);
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 .recharts-legend-item-text {
   color: var(--text-muted) !important;
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+  font-size: 12px !important;
 }
 .recharts-default-tooltip {
-  background-color: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
-  border-radius: 0.5rem !important;
-  box-shadow: var(--shadow) !important;
-}
-.recharts-tooltip-label {
-  color: var(--text-muted) !important;
-}
-.recharts-tooltip-item {
-  color: var(--text) !important;
+  display: none !important;
 }

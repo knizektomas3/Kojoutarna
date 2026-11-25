@@ -58,11 +58,11 @@ export default function Navigation({ userEmail }: { userEmail: string }) {
   }
 
   return (
-    <nav style={{ backgroundColor: 'var(--nav-bg)' }}>
+    <nav style={{ backgroundColor: 'var(--nav-bg)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-14">
           <div className="flex items-center gap-6">
-            <span className="font-bold text-base tracking-tight" style={{ color: 'var(--nav-text)' }}>
+            <span className="font-extrabold text-base tracking-tight" style={{ color: 'var(--nav-text)', letterSpacing: '-0.01em' }}>
               🐔 Kojoutárna
             </span>
             <div className="hidden sm:flex items-center gap-0.5">

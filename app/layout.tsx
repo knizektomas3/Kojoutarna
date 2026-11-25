@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { ToastProvider } from '@/components/Toast'
 import PwaInit from '@/components/PwaInit'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const font = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600', '700', '800'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Kojoutárna',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="cs" className={`h-full ${inter.variable}`} suppressHydrationWarning>
+    <html lang="cs" className={`h-full ${font.variable}`} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
