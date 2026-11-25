@@ -48,9 +48,9 @@ function ChartTooltip({ active, payload, label, format }: { active?: boolean; pa
 function StatCard({ label, value, neutral }: { label: string; value: number; neutral?: boolean }) {
   const color = neutral ? 'var(--text)' : value >= 0 ? '#16a34a' : '#ef4444'
   return (
-    <div className="card p-4 sm:p-5 min-w-0">
-      <p className="text-xs font-bold uppercase tracking-wider mb-2 leading-tight" style={{ color: 'var(--text-subtle)', letterSpacing: '0.05em' }}>{label}</p>
-      <p className="text-lg sm:text-2xl font-extrabold tabular-nums truncate" style={{ color }}>{fmt(value)}</p>
+    <div className="card p-3 sm:p-4 min-w-0">
+      <p className="text-xs font-semibold mb-1.5 leading-snug" style={{ color: 'var(--text-muted)' }}>{label}</p>
+      <p className="text-sm sm:text-base font-bold tabular-nums" style={{ color, wordBreak: 'break-all' }}>{fmt(value)}</p>
     </div>
   )
 }
@@ -101,12 +101,12 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
               <StatCard label="Celkové nákl." value={-g.totalCost} />
               <StatCard label="Provozní zisk/ztráta" value={g.operationalProfit} />
               <StatCard label={g.totalProfit >= 0 ? 'Celkový zisk' : 'Celková ztráta'} value={g.totalProfit} />
-              <div className="card p-4 sm:p-5 min-w-0">
-                <p className="text-xs font-bold uppercase tracking-widest mb-2 leading-tight" style={{ color: 'var(--text-subtle)', letterSpacing: '0.05em' }}>Návratnost (ROI)</p>
+              <div className="card p-3 sm:p-4 min-w-0">
+                <p className="text-xs font-semibold mb-1.5 leading-snug" style={{ color: 'var(--text-muted)' }}>Návratnost (ROI)</p>
                 {roi === null ? (
-                  <p className="text-lg sm:text-2xl font-extrabold" style={{ color: 'var(--text-subtle)' }}>—</p>
+                  <p className="text-sm sm:text-base font-bold" style={{ color: 'var(--text-subtle)' }}>—</p>
                 ) : (
-                  <p className="text-lg sm:text-2xl font-extrabold tabular-nums" style={{ color: roi >= 0 ? '#16a34a' : '#ef4444' }}>
+                  <p className="text-sm sm:text-base font-bold tabular-nums" style={{ color: roi >= 0 ? '#16a34a' : '#ef4444' }}>
                     {roi >= 0 ? '+' : ''}{roi.toFixed(0)} %
                   </p>
                 )}
@@ -115,15 +115,15 @@ export default function FinanceTab({ genNames, monthlySales, salesByCustomer, sa
 
             {pgf && (
               <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 mt-3">
-                <div className="card p-4 sm:p-5 min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-widest mb-2 leading-tight" style={{ color: 'var(--text-subtle)', letterSpacing: '0.05em' }}>Provozní náklady / vejce</p>
-                  <p className="text-lg sm:text-2xl font-extrabold tabular-nums" style={{ color: 'var(--text)' }}>
+                <div className="card p-3 sm:p-4 min-w-0">
+                  <p className="text-xs font-semibold mb-1.5 leading-snug" style={{ color: 'var(--text-muted)' }}>Provozní náklady / vejce</p>
+                  <p className="text-sm sm:text-base font-bold tabular-nums" style={{ color: 'var(--text)' }}>
                     {pgf.costPerEgg !== null ? `${pgf.costPerEgg.toFixed(2)} Kč` : '—'}
                   </p>
                 </div>
-                <div className="card p-4 sm:p-5 min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-widest mb-2 leading-tight" style={{ color: 'var(--text-subtle)', letterSpacing: '0.05em' }}>Ø příjem / měsíc</p>
-                  <p className="text-lg sm:text-2xl font-extrabold tabular-nums" style={{ color: 'var(--text)' }}>
+                <div className="card p-3 sm:p-4 min-w-0">
+                  <p className="text-xs font-semibold mb-1.5 leading-snug" style={{ color: 'var(--text-muted)' }}>Ø příjem / měsíc</p>
+                  <p className="text-sm sm:text-base font-bold tabular-nums" style={{ color: 'var(--text)' }}>
                     {fmt(pgf.avgMonthlyIncome)}
                   </p>
                 </div>
